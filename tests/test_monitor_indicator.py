@@ -1,11 +1,19 @@
 import importlib.util
 import pathlib
+import sys
 import unittest
 
 path = pathlib.Path(__file__).resolve().parents[1] / 'home/.config/hypr/scripts/MonitorIndicator.py'
 spec = importlib.util.spec_from_file_location('monitor_indicator', path)
 module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
+# Runtime files are shipped with an exact asset manifest: tests must not add
+# bytecode caches to the distributable home directory.
+bytecode_setting = sys.dont_write_bytecode
+try:
+    sys.dont_write_bytecode = True
+    spec.loader.exec_module(module)
+finally:
+    sys.dont_write_bytecode = bytecode_setting
 
 
 class MonitorIndicatorTests(unittest.TestCase):
