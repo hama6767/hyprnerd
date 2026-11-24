@@ -279,9 +279,10 @@ tooltip {
 
 #custom-capslock { color: #e5d9f5; padding: 0 6px; }
 
-#custom-desktops { color: #72c8c8; padding: 0 10px; font-weight: bold; }
+#custom-desktops { color: #d4dedf; padding: 0 8px; font-weight: normal; }
+#custom-desktops:hover { background: rgba(114, 200, 200, 0.08); border-radius: 9px; }
 #custom-desktop-prev, #custom-desktop-next, #custom-desktop-add { color: #fcf6f3; padding: 0 9px; }
-#custom-desktop-add { color: #fdb417; }
+#custom-desktop-add { color: #72c8c8; }
 #custom-window-mode { padding: 0 9px; color: #72c8c8; }
 #custom-window-mode.floating { color: #fdb417; }
 

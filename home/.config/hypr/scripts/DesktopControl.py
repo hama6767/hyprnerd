@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
 """Waybar and Rofi front end to the in-compositor desktop controller."""
-import argparse,json,os,pathlib,subprocess
+import argparse,json,os,pathlib,subprocess,sys
 RUNTIME=pathlib.Path(os.environ.get('XDG_RUNTIME_DIR','/tmp'))/'hyprnerd'
 def state():
     try:return json.loads((RUNTIME/'desktop.json').read_text())
     except (OSError,ValueError):return {'mode':'tiling','current':1,'groups':[1],'monitors':1}
 def action(code):subprocess.run(['hyprctl','eval','HYPRNERD_DESKTOP.'+code],check=True,stdout=subprocess.DEVNULL)
 def menu(move=False):
-    s=state();ids=s['groups'];labels=[f"{'●' if n==s['current'] else '○'}  Desktop {n}" for n in ids]
-    if not move:labels.append('＋  New desktop')
-    result=subprocess.run(['rofi','-dmenu','-i','-no-custom','-format','i','-p','Move window' if move else 'Desktop'],input='\n'.join(labels),text=True,capture_output=True)
-    if result.returncode:return
-    index=int(result.stdout.strip())
-    if index==len(ids):action('new_workspace()')
-    elif 0<=index<len(ids):action(f"move({ids[index]},true)" if move else f"switch({ids[index]})")
+    sys.dont_write_bytecode=True
+    from WorkspaceOverview import menu as overview_menu
+    overview_menu(move)
 def main():
     p=argparse.ArgumentParser();p.add_argument('command',choices=['mode','mode-status','status','next','previous','new','menu','move-menu']);a=p.parse_args()
     if a.command in ['mode-status','status']:

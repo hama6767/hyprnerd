@@ -115,5 +115,25 @@
     "monitor_indicator": "Per-output A/B/C labels; selected output uses theme cyan #72C8C8. IPC focus updates observed in approximately 7 ms (script output, not display-frame latency).",
     "indicator_tests": "Only selected output highlighted; event updates avoid per-keypress subprocesses; unplug/reindex, vertical ordering, escaped tooltip names, disabled/mirrored outputs and labels beyond Z covered",
     "config_errors": []
+  },
+  "workspace_overview": {
+    "live_host": "Ubuntu 24.04 / Hyprland 0.57.2",
+    "live_checks": [
+      "Initial workspace/app summary",
+      "Window open updates the app count",
+      "Window move adds the target desktop",
+      "Window close removes the app",
+      "Original desktop remains selected",
+      "Waybar renders the cyan overview without module errors"
+    ],
+    "automated_checks": [
+      "Multi-output companion workspaces aggregate once per desktop",
+      "Repeated apps collapse with counts",
+      "Empty workspaces remain distinguishable",
+      "Overflow retains current selection and complete details",
+      "Menu selects logical desktop IDs and sanitizes app labels",
+      "Typing and focus changes do not trigger overview queries"
+    ],
+    "arch": "This overview update has not been applied live: the reference laptop was closed. The portable configuration is included in the repository."
   }
 }
