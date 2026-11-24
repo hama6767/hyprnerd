@@ -53,7 +53,7 @@
   "qt6_probe": "Qt6 loaded user-local libkvantum.so and system qt6ct platform theme",
   "visual": "Reference wallpaper and palette, translucent rounded windows, 30px top bar and bottom edge auto-hidden Dock",
   "not_exercised": [
-    "Logging out or rebooting",
+    "Logging out or rebooting the Ubuntu host",
     "Locking or suspending the live session",
     "Full OS provisioning on a clean machine"
   ],
@@ -76,5 +76,29 @@
       45
     ],
     "note": "First window creates renderer; subsequent windows share its process. Prompt readiness is a separate measurement."
+  },
+  "foundation": {
+    "date": "2026-11-24",
+    "tested_commit": "d132ed43f571a3447cc714cc29cf945c91fd5d53",
+    "ci": "https://github.com/hama6767/hyprnerd/actions/runs/45417803525",
+    "ci_result": "Ubuntu 24.04, Ubuntu 26.04 and Arch rolling: install, runtime checks and packaging passed",
+    "tools": {
+      "neovim": "0.12.6",
+      "lazygit": "0.66.3",
+      "lazydon": "0.1.4",
+      "atuin": "18.25.1"
+    },
+    "editor": "LazyVim loads with number and relativenumber enabled",
+    "shell": "Quiet startup; Atuin verified in isolated Bash and Zsh homes",
+    "input": "Fcitx5 + Mozc: Ctrl+Space on/off and nihongo -> 日本語 verified on Ubuntu and Arch. Arch test used normal evdev keycodes to respect its existing Mozc keyboard-layout override."
+  },
+  "arch_migration": {
+    "kernel_after_reboot": "7.3.5-arch1-1",
+    "hyprland_after_login": "0.57.2",
+    "official_package_updates_remaining": 0,
+    "live_checks": "Configuration errors empty; wallpaper displayed, palette and fonts matched; top Waybar, auto-hidden Dock and Fcitx5 running",
+    "idempotency": "arch-laptop profile: 0 changed paths and unchanged GTK settings",
+    "package_helper": "Updated yay to 13.1.0 for libalpm 16",
+    "legacy_warning": "The pre-existing AUR lttng-modules-dkms-git package does not build against the new kernel. It is not loaded; desktop boot and input checks passed. Its existing configuration was preserved."
   }
 }
