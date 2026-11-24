@@ -24,6 +24,11 @@ class BootstrapTests(unittest.TestCase):
         gtk=self.home/'.config/gtk-3.0/settings.ini';gtk.parent.mkdir(parents=True);gtk.write_text('[Settings]\ngtk-theme-name=Custom\n')
         b.configure_input(self.backup);first=(d/'profile').read_text();b.configure_input(self.backup)
         self.assertEqual(first,(d/'profile').read_text());self.assertEqual(first.count('Name=mozc'),1);self.assertIn('Default Layout=ee-nodeadkeys',first);self.assertIn('Control+space',(d/'config').read_text());self.assertIn('gtk-theme-name=Custom',gtk.read_text())
+    def test_quiet_shell_keeps_conditionals_valid(self):
+        import subprocess
+        text=b.quiet_shell("if true; then\nfastfetch\nfi\n")
+        subprocess.run(["bash","-n"],input=text,text=True,check=True)
+        self.assertNotIn("fastfetch",text)
     def test_arch_package_plan_is_full_upgrade(self):
         command=b.package_commands('arch')[0];self.assertIn('-Syu',command);self.assertIn('fcitx5-mozc',command)
 if __name__=='__main__':unittest.main()

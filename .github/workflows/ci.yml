@@ -68,7 +68,9 @@ jobs:
       - name: Exercise installed tools and editor
         run: python3 scripts/check-foundation.py
       - name: Validate portable configuration
-        run: python3 scripts/ci.py
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          python3 scripts/ci.py
   package:
     name: Package
     needs: [validate, foundation, arch]

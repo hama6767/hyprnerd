@@ -81,7 +81,7 @@ def replace_block(text,tag,body):
     return text+'\n\n'+start+'\n'+body.rstrip()+'\n'+end+'\n'
 def quiet_shell(text):
     # Only remove standalone startup commands; preserve aliases/functions and user code.
-    return re.sub(r'(?m)^[ \t]*(?:fastfetch|neofetch)(?:[ \t]+[^\n;|&]*)?[ \t]*\n','',text)
+    return re.sub(r'(?m)^[ \t]*(?:fastfetch|neofetch)(?:[ \t]+[^\n;|&]*)?[ \t]*\n',': # Startup dashboard disabled by hyprnerd\n',text)
 def configure_shell(backup):
     p=H/'.bashrc';text=p.read_text() if p.exists() else ''
     text=quiet_shell(text)

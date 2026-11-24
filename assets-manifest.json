@@ -258,7 +258,7 @@
   "home/.config/hypr/lua/desktop.lua": "4fc83b0cef2f221470ed82367074ac2b5956fb37f0eb34e52417b4e6df67959a",
   "home/.config/hypr/lua/env.lua": "e62e8f5de9ab14667a12175ec47f209343c7ccba4af79dc0537d8abdc25229dc",
   "home/.config/hypr/lua/hyprnerd_desktop.lua": "4a54f32bef50cb37a20bc26733d399a8c45bdf87bf7221e23583d1f929779847",
-  "home/.config/hypr/lua/input_method.lua": "a49fdc46b1cfcd3456f1da0a9ec88fb8db48741a0f2ddd1729036c4e7b782d5a",
+  "home/.config/hypr/lua/input_method.lua": "c0ed6dff83cb880298395290855d64eb35a12fb878b03867d04e60f84ca663e4",
   "home/.config/hypr/lua/keybind_index.lua": "9582536bf3fcebd8f83646ccc46a6ee2a47a35eb1fc20b29d73e9c000609eef3",
   "home/.config/hypr/lua/laptop-lid.lua": "dfc8d5416b4eb0fe8877325c1463cc102f3c71cef1c56591504b232e3c3b7dd4",
   "home/.config/hypr/lua/laptops.lua": "dcf00f5875f9030b4a749c55c077d110b10aa5c5010229eddba13271b43f6dd5",

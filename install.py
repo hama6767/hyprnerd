@@ -60,7 +60,10 @@ def main(argv=None):
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--profile',choices=['generic','ubuntu-desktop'],default='generic')
     p.add_argument('--apply',action='store_true');p.add_argument('--check',action='store_true');p.add_argument('--restore',type=pathlib.Path)
-    p.add_argument('--no-reload',action='store_true');a=p.parse_args(argv)
+    p.add_argument('--no-reload',action='store_true')
+    p.add_argument('--keep-legacy-session',action='store_true',help='Keep the entry prepared by scripts/prepare-legacy-session.py; requires --no-reload')
+    a=p.parse_args(argv)
+    if a.keep_legacy_session and not a.no_reload:p.error('--keep-legacy-session requires --no-reload')
     if a.restore:
         backup=a.restore.resolve()
         if a.check:
@@ -79,6 +82,10 @@ def main(argv=None):
     with tempfile.TemporaryDirectory(prefix='kool-stage-') as temp:
         stage=pathlib.Path(temp)/'home';shutil.copytree(R/'home',stage,symlinks=True)
         roots=list(ROOTS)
+        if a.keep_legacy_session:
+            legacy=H/'.local/state/hyprnerd/legacy-entry.conf'
+            if not legacy.is_file():raise RuntimeError('Run scripts/prepare-legacy-session.py --apply first')
+            shutil.copy2(legacy,stage/'.config/hypr/hyprland.conf')
         hostfiles=['user_env.lua','user_settings.lua','monitors.lua','workspaces.lua']
         if a.profile=='ubuntu-desktop':
             for name in hostfiles:shutil.copy2(R/'hosts/ubuntu-desktop'/name,stage/'.config/hypr/UserConfigs'/name)
