@@ -4,7 +4,11 @@
 
 Reproducible KooL-inspired Hyprland 0.57 dotfiles, with a faithful Arch appearance port for Ubuntu.
 
-![Desktop preview](docs/preview.png)
+![Desktop screenshot: translucent windows and dual Waybar layout](docs/preview.png)
+
+![Animated desktop demo: window transitions, focus opacity and blur](docs/demo.gif)
+
+Actual Hyprland desktop capture using temporary demo windows. The GIF is 8 seconds at 1280×720 (about 1 MB); it shows window opening, focus changes, movement, and closing.
 
 個人用Arch環境の **JaKooLit v2.3.17の実際の見た目**を、Ubuntu 24.04 / Hyprland 0.57.2のLua設定へ移植したdotfilesです。新しいKooLの既定テーマではなく、参照機の壁紙・生成済み配色・上下バー・透過率・実効フォントを収録しています。
 
