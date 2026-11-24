@@ -1,0 +1,48 @@
+{
+  "platform": "Ubuntu 24.04 amd64",
+  "qt_style_packages": [
+    {
+      "qt": 6,
+      "url": "https://ppa.launchpadcontent.net/papirus/papirus/ubuntu/pool/main/q/qt6-style-kvantum/qt6-style-kvantum_1.0.10-0ubuntu1~noble1_amd64.deb",
+      "sha256": "cc28f78f09d9707735d5f259cc8f697c5e25bf1c6072a206151c3137075a30fe",
+      "member": "usr/lib/x86_64-linux-gnu/qt6/plugins/styles/libkvantum.so"
+    },
+    {
+      "qt": 5,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/universe/q/qt5-style-kvantum/qt5-style-kvantum_1.0.10-1build3_amd64.deb",
+      "sha256": "b0bcc1ac5cc37e8e752c7b7c01abeb8f3dcbd2220ba87f7d7683c34773a8f482",
+      "member": "usr/lib/x86_64-linux-gnu/qt5/plugins/styles/libkvantum.so"
+    },
+    {
+      "qt": 5,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/universe/q/qt5ct/qt5ct_1.5-1build11_amd64.deb",
+      "sha256": "b1fdaf25512a97723a9ffd59108a51776a9b96235d88baa3de553cd3b034fc3c",
+      "member": "usr/lib/x86_64-linux-gnu/qt5/plugins/platformthemes/libqt5ct.so",
+      "target": "platformthemes/libqt5ct.so"
+    },
+    {
+      "qt": 5,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/universe/q/qt5ct/qt5ct_1.5-1build11_amd64.deb",
+      "sha256": "b1fdaf25512a97723a9ffd59108a51776a9b96235d88baa3de553cd3b034fc3c",
+      "member": "usr/lib/x86_64-linux-gnu/qt5/plugins/styles/libqt5ct-style.so",
+      "target": "styles/libqt5ct-style.so"
+    }
+  ],
+  "upstream": {
+    "url": "https://github.com/LinuxBeginnings/Hyprland-Dots",
+    "revision": "170b69b846b1cd92ebc6d81c17393e17bed8d416",
+    "version": "2.3.28.3"
+  },
+  "reference": {
+    "dots": "JaKooLit 2.3.17",
+    "hyprland": "0.52.1"
+  },
+  "target": {
+    "hyprland": "0.57.2",
+    "kitty": "0.32.2",
+    "waybar": "0.16.0",
+    "rofi": "1.7.5",
+    "wallust": "3.5.2",
+    "awww": "0.12.1"
+  }
+}

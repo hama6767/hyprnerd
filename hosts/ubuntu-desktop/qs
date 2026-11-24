@@ -1,0 +1,5 @@
+#!/bin/sh
+# ML4W's bundled Qt must not load Ubuntu's Qt 6.4 theme plugins.
+unset QT_QPA_PLATFORMTHEME QT_PLUGIN_PATH
+export QT_STYLE_OVERRIDE=Fusion
+exec "$HOME/.local/share/ml4w-tools/quickshell/bin/qs" "$@"
