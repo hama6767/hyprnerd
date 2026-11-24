@@ -100,5 +100,20 @@
     "idempotency": "arch-laptop profile: 0 changed paths and unchanged GTK settings",
     "package_helper": "Updated yay to 13.1.0 for libalpm 16",
     "legacy_warning": "The pre-existing AUR lttng-modules-dkms-git package does not build against the new kernel. It is not loaded; desktop boot and input checks passed. Its existing configuration was preserved."
+  },
+  "monitor_navigation": {
+    "date": "2026-11-24",
+    "arch_real_outputs": 3,
+    "checks": [
+      "Spatial tile focus and empty-monitor focus",
+      "New shared-instance Kitty terminal opens on selected output",
+      "Tile transfer to empty monitor, return to occupied monitor, and local tile rearrangement",
+      "Desktop group and all displayed workspaces unchanged during focus and window moves",
+      "Original workspace and focus restored after removing test windows",
+      "Exactly one binding per arrow for Super, Super+Shift and Super+Alt"
+    ],
+    "monitor_indicator": "Per-output A/B/C labels; selected output uses theme cyan #72C8C8. IPC focus updates observed in approximately 7 ms (script output, not display-frame latency).",
+    "indicator_tests": "Only selected output highlighted; event updates avoid per-keypress subprocesses; unplug/reindex, vertical ordering, escaped tooltip names, disabled/mirrored outputs and labels beyond Z covered",
+    "config_errors": []
   }
 }

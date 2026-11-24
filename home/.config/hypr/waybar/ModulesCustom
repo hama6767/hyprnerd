@@ -256,6 +256,13 @@
     "return-type": "json",
     "on-click": "$HOME/.config/hypr/scripts/DesktopControl.py mode"
   },
+  "custom/monitor": {
+    "exec": "$HOME/.config/hypr/scripts/MonitorIndicator.py",
+    "return-type": "json",
+    "restart-interval": 2,
+    "hide-empty-text": true,
+    "tooltip": true
+  },
   "custom/desktops": {
     "exec": "$HOME/.config/hypr/scripts/DesktopControl.py status",
     "interval": 1,

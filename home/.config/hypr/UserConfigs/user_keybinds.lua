@@ -148,6 +148,32 @@ bind("SUPER", "B", exec_cmd("firefox"), { description = "open browser" })
 unbind("SUPER", "Return")
 bind("SUPER", "Return", exec_cmd("kitty --single-instance --instance-group hyprnerd-fast"), { description = "Open terminal (shared Kitty instance)" })
 
+-- Spatial navigation: prefer a window in that direction, then the adjacent
+-- output (including an empty one). Do not cycle to an unrelated window.
+-- Native dispatchers use the current monitor layout, scale and rotation;
+-- they do not switch Hyprnerd's desktop group or fork a helper per keypress.
+hl.config({
+  general = { no_focus_fallback = true },
+  binds = { window_direction_monitor_fallback = true, focus_preferred_method = 1 },
+  -- Keep the pointer on the selected output so new terminals open there.
+  cursor = { no_warps = false },
+})
+for _, item in ipairs({
+  { "left", -50, 0 }, { "right", 50, 0 },
+  { "up", 0, -50 }, { "down", 0, 50 },
+}) do
+  local direction, dx, dy = item[1], item[2], item[3]
+  unbind("SUPER", direction)
+  bind("SUPER", direction, hl.dsp.focus({ direction = direction }),
+    { description = "focus " .. direction .. " window or monitor" })
+  unbind("SUPER SHIFT", direction)
+  bind("SUPER SHIFT", direction, hl.dsp.window.move({ direction = direction }),
+    { description = "move window " .. direction .. " across tiles or monitors" })
+  unbind("SUPER ALT", direction)
+  bind("SUPER ALT", direction, hl.dsp.window.resize({ x = dx, y = dy, relative = true }),
+    { description = "resize window " .. direction, repeating = true })
+end
+
 -- Hyprnerd: workspace changes act on the complete desktop across all outputs.
 local function desktop(fn)
   return function() if HYPRNERD_DESKTOP then fn(HYPRNERD_DESKTOP) end end

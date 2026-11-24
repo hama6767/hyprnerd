@@ -199,7 +199,7 @@
   "home/.config/hypr/UserConfigs/user_defaults.lua": "6f94df2232993aea5fee6f033fb8db522e0f1b872d9b1cb7f8b8e6624300fdff",
   "home/.config/hypr/UserConfigs/user_desktop.lua": "0be0697572bb7f8fcffe5523291c4c9bc508290f16ad8616ac65825559b6a3b8",
   "home/.config/hypr/UserConfigs/user_env.lua": "b43dc001b82c58d082a796be75cbfe6bf9253fb1e1c00d84cbce13b6b81298af",
-  "home/.config/hypr/UserConfigs/user_keybinds.lua": "254bcc7ab329a7aaf559b241584f14ce4433734461d637b38599fd91131aaa93",
+  "home/.config/hypr/UserConfigs/user_keybinds.lua": "a618bcf6546165ca7d62e704cfc0361f0082a2b628b1884acdac07502405b798",
   "home/.config/hypr/UserConfigs/user_laptops.lua": "3a2b28a7b41d7431905dbd5eda65aab3a05106a73432562818095cd7cf050339",
   "home/.config/hypr/UserConfigs/user_layer_rules.lua": "706273c4f4e97992b4a6734da6569c6f1f5821fd832d5b3e688409ba808e733f",
   "home/.config/hypr/UserConfigs/user_settings.lua": "71e548a1963adad0e7edbf91d2de6745490fd46527a22788647873f7c5de92e6",
@@ -382,6 +382,7 @@
   "home/.config/hypr/scripts/Logout.sh": "ece9f97c8044272fa0357f943d7011eab7c106ea82866e0071141548af567e28",
   "home/.config/hypr/scripts/LuaConfigWatch.sh": "3c57667e3b8a1627550d7cbcf794f386f46d4ba910e951ecf9e85cf41e10b8a1",
   "home/.config/hypr/scripts/MediaCtrl.sh": "85cc9e04245dab06554c0077241a32a5dd75da128f5b22ea7860dc22a3ba83b4",
+  "home/.config/hypr/scripts/MonitorIndicator.py": "bff7baacf65adc17da23eee0e398a1275fbe2a795a91d7f867c037d6f8266f43",
   "home/.config/hypr/scripts/MonitorProfiles.sh": "8490b6446f90088b4c45854d6f33f4a376794e4cffb22ab2f0fc1dd6f814b1ad",
   "home/.config/hypr/scripts/MonitorWatcher.sh": "1c3e87c417ac981b20412d42ff10b478204ba2587502c5f1359fac1146e811bf",
   "home/.config/hypr/scripts/OverviewToggle.sh": "e26d12630c9b57d139f5cbb8f3066224a6cbfdb02e9b905daa16cbc53efd938c",
@@ -467,7 +468,7 @@
   "home/.config/hypr/wallust/wallust-v4.toml": "3b5ef1e3b76b4beacd3023040e2fccdceccf730645d70cbfc43e2a65a44c72bd",
   "home/.config/hypr/wallust/wallust.toml": "e919eeb3c4c4b5de11a7e8155c9e5fc08bcb2b49d520f7241503ad9517b3ca67",
   "home/.config/hypr/waybar/Modules": "282dc31b5a1490528db7cd73794cd8860c80952496e9cee5190443c32f166863",
-  "home/.config/hypr/waybar/ModulesCustom": "e933210f1a2de29500957b671262c36172100afb170f5f97dda77379b26f796d",
+  "home/.config/hypr/waybar/ModulesCustom": "f1d787a8252a31d2200310fe5de989f4b3e09ffe43bf2614abaca192a86a0661",
   "home/.config/hypr/waybar/ModulesGroups": "d62273ecab6a9fcc3a48eff74e481b68f188cc7ffec85adfabb8190e3af9775c",
   "home/.config/hypr/waybar/ModulesVertical": "e48028c85efe5669db8e2e5d7910ee175952080fbb6623bb308e09f5bbe7d7ce",
   "home/.config/hypr/waybar/ModulesWorkspaces": "38c6eed0cfdac7e4391512f6fcac0cc929dae16efcd19ac2ebea026b51852415",
@@ -475,7 +476,7 @@
   "home/.config/hypr/waybar/config": {
     "link": "configs/Hyprnerd-Desktop"
   },
-  "home/.config/hypr/waybar/configs/Hyprnerd-Desktop": "2e92714e28b20470831badbefc7886ae89df9e8ec1f862b3df7bb84e2f0bcdb8",
+  "home/.config/hypr/waybar/configs/Hyprnerd-Desktop": "b28bba77e3c3619e1a49f7d8f00c53e50ba4916ab3d2e9021566c476c92139e2",
   "home/.config/hypr/waybar/configs/[BOT & Left] SouthWest": "d2c0eb3b81a0b0246507da574b44d400acf9d4dd6736658c8e9fcca3528da85a",
   "home/.config/hypr/waybar/configs/[BOT & Right] SouthEast": "fb73ea2d0b2deffbc5e0cc4f8f16c9d39ec4174bffdce038ac461810ef5d424e",
   "home/.config/hypr/waybar/configs/[BOT] Camellia": "f3cadee465a9a3d2746e12fd5763d6c0d862fea1f037bcb084026ec4fae2e37a",
@@ -515,6 +516,9 @@
   "home/.config/hypr/waybar/configs/[TOP] Simple": "eccf2f4b1326c1b3fb2264639c5bd0fcadf5bce034441b53b8e2d00661739598",
   "home/.config/hypr/waybar/configs/[TOP] Simpliest": "0b365e02f35ea8f0dd54c7d67463a847bc1e56d992be33965e95197614cddec4",
   "home/.config/hypr/waybar/configs/[TOP] Sleek": "0b061887e02f1950a8af1651899ed035b8dd11e5c1442e084826a00b36ffd532",
+  "home/.config/hypr/waybar/style.css": {
+    "link": "style/[Dark] Latte-Wallust combined.css"
+  },
   "home/.config/hypr/waybar/style/[0 VERTICAL] Golden Noir.css": "6b6f81a46639bbecb0c2a03f4d63ca72ce4061afa226531ecccce97f1e368037",
   "home/.config/hypr/waybar/style/[0 VERTICAL] Oglo Chicklets.css": "a89e390044285541c4ef8482fc252e4ddcfc35ad17268c4cf02a71fc9756868a",
   "home/.config/hypr/waybar/style/[0 VERTICAL] [Catpuccin] Mocha.css": "58b2d7a8920c3dd2ad571b74edd0215e9d3d2f7b630f4259e697899d56b8497b",
@@ -533,7 +537,7 @@
   "home/.config/hypr/waybar/style/[Dark] Golden Noir.css": "8885a8d15ffc00c3b3683004f256076d8c660af2570076bd9a3b8dd03984fbc2",
   "home/.config/hypr/waybar/style/[Dark] Half-Moon.css": "ea06523fb3f37aba0b211d8ad0cec7edbfaa242c6362a20451ddece7a64952e3",
   "home/.config/hypr/waybar/style/[Dark] Latte-Wallust combined v2.css": "760623e96957d27f57bcede7330ae7ba3a3dbdc3cba17c8c6a398ec522829a47",
-  "home/.config/hypr/waybar/style/[Dark] Latte-Wallust combined.css": "4fa1e7bf8e8308922baf94bec9295280aab8e2c58d6dd60486f516da93dccdfa",
+  "home/.config/hypr/waybar/style/[Dark] Latte-Wallust combined.css": "1c7fe796df61594e385d506a5681dddb4a8f97b1fc5ed10297a843c4dd878cd5",
   "home/.config/hypr/waybar/style/[Dark] Purpl.css": "8029ad97d2d9d6f1cf20ef5beeb353cd8ba98f33744c2108fca56c0557956c75",
   "home/.config/hypr/waybar/style/[Dark] Wallust Obsidian Edge.css": "43b6560513a1d1a6aeb2abf34c684f7fcd652554d1172eaa41fa413ae7ebe017",
   "home/.config/hypr/waybar/style/[Extra] Arrow.css": "0cc13f56c174d4135d9d1196f1c21f4b427ff49c3db8fb0b8e411f62c5685f94",
@@ -569,9 +573,6 @@
   "home/.config/hypr/waybar/style/catppuccin-themes/latte.css": "fcd8a6c87efa5df165e5d10d98f75885e0497cc4063481c398615f36330460de",
   "home/.config/hypr/waybar/style/catppuccin-themes/mocha.css": "d60aaed05aad83a6ebdbffa88e53fbc6d41a0c9c1ac65df099f676493cc6f569",
   "home/.config/hypr/waybar/style/catppuccin-themes/rgbmocha.css": "572e2c4603bcb2f04a3faf024f5f87f805f8eca978b3fd2edf4f5cb6d82a1db4",
-  "home/.config/hypr/waybar/style.css": {
-    "link": "style/[Dark] Latte-Wallust combined.css"
-  },
   "home/.config/hypr/waybar/wallust/colors-waybar.css": "3593d900df7dcae129d1fd49a7a38ebb661376a3ba6ef8a8d0fc1c462adf4ad9",
   "home/.config/kitty/kitty.conf": "d2569e32f4e35b153701d546a7eea0e1c37fa9545bcb684235e1a3636a947bec",
   "home/.config/nwg-dock-hyprland/hotspot.css": "f5c2200b3758b979199fae4c5b2c596a8f53ca47b1370ac84ca88cc5a842cdcb",
