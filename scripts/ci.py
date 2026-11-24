@@ -28,11 +28,11 @@ def main():
         try:text=path.read_text()
         except UnicodeDecodeError:continue
         assert not secret.search(text),f'Credential pattern in {relative}'
-    python=[R/'install.py',* (R/'scripts').glob('*.py'),* (R/'tests').glob('*.py'),* (R/'home/.config/hypr/scripts').glob('*.py')]
+    python=[R/'install.py',R/'bootstrap.py',* (R/'scripts').glob('*.py'),* (R/'tests').glob('*.py'),* (R/'home/.config/hypr/scripts').glob('*.py')]
     for path in python:ast.parse(path.read_text(),filename=str(path))
     shell=[p for p in (R/'home').rglob('*.sh') if not p.is_symlink()]
     for path in shell:subprocess.run(['bash','-n',str(path)],check=True)
-    lua=list((R/'home/.config/hypr').rglob('*.lua'))+list((R/'hosts').rglob('*.lua'))
+    lua=list((R/'home/.config/hypr').rglob('*.lua'))+list((R/'hosts').rglob('*.lua'))+list((R/'foundation').rglob('*.lua'))
     compiler=shutil.which('luac5.4') or shutil.which('luac')
     if not compiler:raise RuntimeError('Install lua5.4 to check Lua syntax')
     for path in lua:subprocess.run([compiler,'-p',str(path)],check=True)

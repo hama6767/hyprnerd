@@ -89,6 +89,7 @@ local exec_once = user_startup_helper.exec_once
 
 -- Add custom startup commands:
 local startup_commands = {
+  "$HOME/.config/hypr/scripts/InputMethod.sh",
   "$HOME/.config/hypr/scripts/Dock.sh --start",
   -- "kdeconnect-app",
   -- "blueman-applet",

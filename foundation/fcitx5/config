@@ -1,0 +1,13 @@
+[Hotkey]
+EnumerateWithTriggerKeys=True
+AltTriggerKeys=
+EnumerateForwardKeys=
+EnumerateBackwardKeys=
+
+[Hotkey/TriggerKeys]
+0=Control+space
+
+[Behavior]
+ActiveByDefault=False
+ShareInputState=No
+PreeditEnabledByDefault=True

@@ -8,15 +8,39 @@ Arch 環境（JaKooLit v2.3.17）の見た目を Ubuntu 24.04 / Hyprland 0.57.2 
 ![Desktop demo](docs/demo.gif)
 
 - **再現性重視**: 壁紙・配色・フォント・GTK/Qt テーマを `home/` に同梱し、バージョンとハッシュを `dependencies.lock.json` で固定
-- **非破壊**: `sudo` 不要。既存の Neovim / ROS / Atuin 等の設定は上書きせず、適用前に自動バックアップ
+- **バックアップ**: デスクトップ設定は `sudo` 不要。基本道具のパッケージ導入にはsudoを使用し、既存設定やAtuin履歴を退避・保持
 - **対象外**: OS や Hyprland 本体のインストーラではありません（既存の Hyprland 0.57.x 環境向け）
+
+## 基本道具の自動インストール
+
+Ubuntu 24.04 / 26.04 と Arch Linux（x86_64）では、リポジトリ取得後に次を実行します。
+
+```bash
+python3 bootstrap.py --check
+python3 bootstrap.py --apply
+```
+
+Neovim 0.12.6、LazyVim、lazygit 0.66.3、LazyDon 0.1.4、Atuin 18.25.1、tree-sitter、ripgrep、fdを導入します。公式リリースのURLとSHA-256、LazyVimのプラグインコミットを固定しています。実行ファイルは `~/.local/opt/hyprnerd-tools/` に配置し、`~/.local/bin/` へリンクします。Neovimは相対行番号を標準にし、現在行は絶対行番号を表示します。
+
+Fcitx5 + Mozcと日本語フォントもパッケージから導入し、`Ctrl+Space` で日本語入力を切り替えます。既存のキーボードグループとGTKテーマは維持します。Hyprland 0.57用の起動処理とキー割り当てはデスクトップ設定に含みます。入力方式を読み込んでいない既存アプリは再起動してください。
+
+Bash起動時のFastfetch／Neofetchは実行しません。Atuinはシェルへ組み込みますが、アカウント登録やクラウド同期の新規設定はしません。既存のAtuin設定・履歴、LazyDonのアカウントはリポジトリに含めません。Atuinの既存DBは更新前にSQLiteのオンラインバックアップを取ります。
+
+既存のLazyVimは独自プラグインと設定を保持し、相対行番号だけ追加します。他のNeovim設定は退避してから同梱の最小構成を配置します。変更前の設定・リンク・DBは `~/.local/state/hyprnerd/bootstrap-backups/日時/` に保存します。必要なパッケージが導入済みなら `--skip-packages`、プラグイン取得を次回起動まで遅らせるなら `--skip-plugins`、GUIの入力エンジンを起動しないなら `--no-session` を付けます。`--check` は読み取り専用です。
+
+パッケージ導入にはsudoが必要です。Archでは部分更新を避けるため、パッケージ処理に `pacman -Syu` を使います。既存OSを更新したくない場合は依存を確認して `--skip-packages` を使用してください。基本道具の導入はHyprlandのバージョンを変更しません。デスクトップの全設定は引き続き **Hyprland 0.57.x** が必要で、0.52などの稼働中セッションへLua設定を読み込ませません。
+
+```bash
+python3 scripts/check-foundation.py
+# 続いて、既存のHyprland 0.57セッションへ下記のデスクトップ設定を適用
+```
 
 ## セットアップ / 再適用
 
 リポジトリを取得し、Hyprland セッション上から実行します。
 
 ```bash
-git clone [https://github.com/hama6767/hyprnerd.git](https://github.com/hama6767/hyprnerd.git) && cd hyprnerd
+git clone https://github.com/hama6767/hyprnerd.git && cd hyprnerd
 
 # 任意: 公式 Kitty（x86_64）および Ubuntu 24.04 向け Qt5/Qt6 プラグインをユーザー領域へ導入
 python3 scripts/install-kitty.py
@@ -50,6 +74,7 @@ python3 install.py --profile ubuntu-desktop --apply
 | 前／次へウィンドウを移動（追従） | `Super+Shift+[` / `Super+Shift+]` |
 | デスクトップを追加 | `Super+Ctrl+N` / バー中央の `+` |
 | 一覧から選択／ウィンドウ移動 | バー中央の番号を左／右クリック |
+| 日本語入力を切り替え | `Ctrl+Space` |
 | Dock の有効／無効を切り替え | `Ctrl+Alt+D` |
 
 ## 復元
@@ -72,6 +97,8 @@ python3 install.py --restore ~/.local/state/kool-dotfiles/backups/<日時>
 
 ```text
 home/               dotfiles 本体・壁紙・フォント・テーマ・アイコン
+foundation/         LazyVim最小構成と日本語入力の初期設定
+bootstrap.py        基本道具・Atuin・Mozcの自動導入
 hosts/              ホスト固有設定（NVIDIA 環境変数など）
 reference-palette/  参照壁紙一致時に使う固定配色
 scripts/            導入・検証・CI・パッケージング用スクリプト
@@ -96,6 +123,8 @@ scripts/            導入・検証・CI・パッケージング用スクリプ�
 
 ## 検証・開発・リリース
 
+Ubuntu 24.04 / 26.04 でPython 3.12 / 3.14を検証します。両Ubuntu環境とArch rollingコンテナでは、基本道具とMozcを実際にインストールし、LazyVimの起動・相対行番号・AtuinのBash組み込みまで確認します。GUI/GPUや物理キー入力の検証は実機で別途行います。
+
 Push / PR ごとに GitHub Actions でインストーラのテスト（チェック・適用・冪等性・復元）、Lua/Bash 構文検証、ハッシュ整合性チェックを実行します。タグ（`v*`）を push するとアーカイブとチェックサム付きで GitHub Release を公開します。
 
 ```bash
@@ -104,6 +133,8 @@ python3 scripts/ci.py                     # CI 検証一式
 python3 -m unittest discover -s tests -v  # ユニットテスト
 python3 scripts/package.py --version 0.2.0
 ```
+
+上流の実行時に不要な開発テスト57ファイルは配布用ホームから除外し、本リポジトリのテストは `tests/` に保持しています。新規LazyVimには未使用サンプルを含めません。
 
 ## 出典・ライセンス
 

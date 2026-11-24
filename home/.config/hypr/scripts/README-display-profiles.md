@@ -281,7 +281,7 @@ alone and let the watcher import the arrangement instead.
 | `scripts/MonitorWatcher.sh` | Watches Hyprland's event socket, and `~/.config/hypr/monitors.conf` so a directly-run `nwg-displays` is imported. One per session. |
 | `scripts/MonitorProfiles.sh` | Quick Settings → **Choose Monitor Profiles**: this system's layouts, plus a one-way import of `Monitor_Profiles/`. |
 | `Monitor_Profiles/Work.lua` | An example profile: one `preferred`/`auto`/`1` rule per output, matched by port. |
-| `scripts/tests/` | The 677-check suite. It is installed with the rest of `config/hypr`, so it is available on an installed system too - run it with `bash ~/.config/hypr/scripts/tests/run-all.sh`. |
+| `tests/` | Upstream development suite; omitted from this installed profile. Hyprnerd verification lives in the repository `tests/` and `scripts/ci.py`. |
 
 Runtime state lives in `$XDG_RUNTIME_DIR/kooldots-display-profiles/`:
 `display-profile.log`, `monitor-watcher.log`, `current` (the fingerprint and the
@@ -374,7 +374,7 @@ four-monitor desktops, two identical monitors without serial numbers, a rotated
 monitor and a monitor that reports no modes.
 
 ```bash
-bash ~/.config/hypr/scripts/tests/run-all.sh
+python3 scripts/ci.py  # run from the hyprnerd repository
 ```
 
 `test-no-hardcoded-outputs.sh` is the one that answers "is this still specific

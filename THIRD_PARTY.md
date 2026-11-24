@@ -16,3 +16,5 @@
 | Wallpapers and power-menu artwork | User-provided reference wallpaper and upstream KooL artwork; original authors retain copyright. The code licence does not grant additional rights to these images. |
 
 Ubuntu Kvantum/qt5ct packages are downloaded by exact URL and checksum; package binaries are excluded from Git and release archives. Package source and licence information remain available from Ubuntu and the Papirus PPA named in `dependencies.lock.json`.
+
+- LazyVim starter configuration: https://github.com/LazyVim/starter at 803bc181d7c0d6d5eeba9274d9be49b287294d99; Apache-2.0, license in foundation/nvim/LICENSE. Tool binaries are downloaded from their authors, not redistributed in this repository.

@@ -32,6 +32,7 @@ load_module("user_overrides")
 load_module("monitors")
 load_module("workspaces")
 load_module("desktop")
+load_module("input_method")
 
 -- Every keybind file has been loaded by now, so render the list the rofi menu
 -- reads. KeyBinds.sh re-renders through `hyprctl eval` before it runs, so a

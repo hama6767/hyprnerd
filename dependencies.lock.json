@@ -55,5 +55,74 @@
     "version": "0.51.1",
     "url": "https://github.com/kovidgoyal/kitty/releases/download/v0.51.1/kitty-0.51.1-x86_64.txz",
     "sha256": "d309be978f017dbdcccae175d281092fefe7c8bc64478fa620581604ab0b53c0"
+  },
+  "foundation_tools": {
+    "neovim": {
+      "name": "nvim-linux-x86_64.tar.gz",
+      "url": "https://github.com/neovim/neovim/releases/download/v0.12.6/nvim-linux-x86_64.tar.gz",
+      "sha256": "474430d53e6264f6d6dd18db42d6dc9df3a1b56ca9e88a325bbf860e1a811d87",
+      "version": "0.12.6",
+      "member": "nvim-linux-x86_64/bin/nvim",
+      "binary": "nvim",
+      "format": "tar"
+    },
+    "lazygit": {
+      "name": "lazygit_0.66.3_linux_x86_64.tar.gz",
+      "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.66.3/lazygit_0.66.3_linux_x86_64.tar.gz",
+      "sha256": "0a23f429a95f0d09db298b3c291536d818de066aa5a85c255806f0490ff6656b",
+      "version": "0.66.3",
+      "member": "lazygit",
+      "binary": "lazygit",
+      "format": "tar"
+    },
+    "atuin": {
+      "name": "atuin-x86_64-unknown-linux-musl.tar.gz",
+      "url": "https://github.com/atuinsh/atuin/releases/download/v18.25.1/atuin-x86_64-unknown-linux-musl.tar.gz",
+      "sha256": "f2bc97588d5aa91f49b992298544e13776df044cb4baf606875c7cc8444e9e00",
+      "version": "18.25.1",
+      "member": "atuin-x86_64-unknown-linux-musl/atuin",
+      "binary": "atuin",
+      "format": "tar"
+    },
+    "lazydon": {
+      "name": "lazydon-linux-x86_64.tar.gz",
+      "url": "https://github.com/hama6767/LazyDon/releases/download/v0.1.4/lazydon-linux-x86_64.tar.gz",
+      "sha256": "62dc70af04dbfbdca218fe152a24cdda4d69200b44ba7b7037926844a13bf705",
+      "version": "0.1.4",
+      "member": "lazydon",
+      "binary": "lazydon",
+      "format": "tar"
+    },
+    "tree-sitter": {
+      "name": "tree-sitter-linux-x64.gz",
+      "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.2/tree-sitter-linux-x64.gz",
+      "sha256": "7ed56d152c52437397b9fcaa43cf341f49933cecc1ca291843f0d347c6e2cb3a",
+      "version": "0.27.2",
+      "member": "tree-sitter",
+      "binary": "tree-sitter",
+      "format": "gzip"
+    },
+    "ripgrep": {
+      "name": "ripgrep-16.0.0-x86_64-unknown-linux-musl.tar.gz",
+      "url": "https://github.com/BurntSushi/ripgrep/releases/download/16.0.0/ripgrep-16.0.0-x86_64-unknown-linux-musl.tar.gz",
+      "sha256": "54268ab4643c00a290a29b0086066d64b3f56236dd805ec64629a86f9bd29fd0",
+      "version": "16.0.0",
+      "member": "ripgrep-16.0.0-x86_64-unknown-linux-musl/rg",
+      "binary": "rg",
+      "format": "tar"
+    },
+    "fd": {
+      "name": "fd-v10.5.2-x86_64-unknown-linux-gnu.tar.gz",
+      "url": "https://github.com/sharkdp/fd/releases/download/v10.5.2/fd-v10.5.2-x86_64-unknown-linux-gnu.tar.gz",
+      "sha256": "985e24041e9ef6e9a38e9e088743405dde23d7220aa96740f091862167d9ff28",
+      "version": "10.5.2",
+      "member": "fd-v10.5.2-x86_64-unknown-linux-gnu/fd",
+      "binary": "fd",
+      "format": "tar"
+    }
+  },
+  "lazyvim": {
+    "starter_revision": "803bc181d7c0d6d5eeba9274d9be49b287294d99",
+    "lazy_revision": "85c7ff3711b730b4030d03144f6db6375044ae82"
   }
 }

@@ -178,3 +178,7 @@ for _,item in ipairs({{"bracketleft",-1},{"bracketright",1}}) do
   replace("SUPER SHIFT",item[1],function(d) d.move_step(delta,true) end,"move window to adjacent desktop")
   replace("SUPER CTRL",item[1],function(d) d.move_step(delta,false) end,"move window silently to adjacent desktop")
 end
+
+-- Reserve Ctrl+Space for Japanese input, including native Wayland terminals.
+unbind("CTRL", "SPACE")
+bind("CTRL", "SPACE", exec_cmd("fcitx5-remote -t"), { description = "toggle Japanese input" })
