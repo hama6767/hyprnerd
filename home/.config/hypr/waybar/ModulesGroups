@@ -126,5 +126,14 @@
       "custom/logout",
       "custom/reboot"
     ]
+  },
+  "group/desktops": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/desktop-prev",
+      "custom/desktops",
+      "custom/desktop-next",
+      "custom/desktop-add"
+    ]
   }
 }

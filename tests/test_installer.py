@@ -27,7 +27,7 @@ class InstallerTests(unittest.TestCase):
             target.parent.mkdir(parents=True,exist_ok=True)
             if relative in ['.config/waybar','.config/rofi','.config/wallust']:
                 target.symlink_to('hypr/'+relative.rsplit('/',1)[-1]);continue
-            if relative in ['.config/hypr','.config/swaync','.config/wlogout','.config/quickshell','.config/Kvantum','.config/cava','.config/swappy','.local/share/themes/Kali-Dark','.local/share/icons/Flat-Remix-Blue-Dark','.local/share/fonts/kool-reference']:
+            if relative in ['.config/nwg-dock-hyprland','.config/hypr','.config/swaync','.config/wlogout','.config/quickshell','.config/Kvantum','.config/cava','.config/swappy','.local/share/themes/Kali-Dark','.local/share/icons/Flat-Remix-Blue-Dark','.local/share/fonts/kool-reference']:
                 target.mkdir();(target/'fixture').write_text('profile data\n')
             else:target.write_text('profile data\n')
         hypr=self.repo/'home/.config/hypr'

@@ -249,5 +249,36 @@
     "interval": 1,
     "return-type": "json",
     "tooltip": true
+  },
+  "custom/window-mode": {
+    "exec": "$HOME/.config/hypr/scripts/DesktopControl.py mode-status",
+    "interval": 1,
+    "return-type": "json",
+    "on-click": "$HOME/.config/hypr/scripts/DesktopControl.py mode"
+  },
+  "custom/desktops": {
+    "exec": "$HOME/.config/hypr/scripts/DesktopControl.py status",
+    "interval": 1,
+    "return-type": "json",
+    "on-click": "$HOME/.config/hypr/scripts/DesktopControl.py menu",
+    "on-click-right": "$HOME/.config/hypr/scripts/DesktopControl.py move-menu",
+    "on-scroll-up": "$HOME/.config/hypr/scripts/DesktopControl.py previous",
+    "on-scroll-down": "$HOME/.config/hypr/scripts/DesktopControl.py next",
+    "smooth-scrolling-threshold": 1
+  },
+  "custom/desktop-prev": {
+    "format": "",
+    "tooltip-format": "Previous desktop on all displays",
+    "on-click": "$HOME/.config/hypr/scripts/DesktopControl.py previous"
+  },
+  "custom/desktop-next": {
+    "format": "",
+    "tooltip-format": "Next desktop on all displays",
+    "on-click": "$HOME/.config/hypr/scripts/DesktopControl.py next"
+  },
+  "custom/desktop-add": {
+    "format": "＋",
+    "tooltip-format": "Add a desktop",
+    "on-click": "$HOME/.config/hypr/scripts/DesktopControl.py new"
   }
 }

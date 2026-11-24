@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Offline repository checks; never imports or executes desktop configuration."""
-import ast, hashlib, json, pathlib, re, shutil, subprocess, sys, tomllib
+import ast, hashlib, json, pathlib, re, shutil, subprocess, sys, tempfile, tomllib
 R=pathlib.Path(__file__).resolve().parents[1]
 def load_jsonc(path):
     text=path.read_text()
@@ -28,7 +28,7 @@ def main():
         try:text=path.read_text()
         except UnicodeDecodeError:continue
         assert not secret.search(text),f'Credential pattern in {relative}'
-    python=[R/'install.py',* (R/'scripts').glob('*.py'),* (R/'tests').glob('*.py')]
+    python=[R/'install.py',* (R/'scripts').glob('*.py'),* (R/'tests').glob('*.py'),* (R/'home/.config/hypr/scripts').glob('*.py')]
     for path in python:ast.parse(path.read_text(),filename=str(path))
     shell=[p for p in (R/'home').rglob('*.sh') if not p.is_symlink()]
     for path in shell:subprocess.run(['bash','-n',str(path)],check=True)
@@ -38,8 +38,10 @@ def main():
     for path in lua:subprocess.run([compiler,'-p',str(path)],check=True)
     for path in [R/'dependencies.lock.json',R/'docs/validation.json']:
         json.loads(path.read_text())
-    for name in ['Modules','ModulesCustom','ModulesGroups','ModulesWorkspaces','UserModules','configs/[TOP & BOT] SummitSplit v2']:
+    for name in ['Modules','ModulesCustom','ModulesGroups','ModulesWorkspaces','UserModules','configs/[TOP & BOT] SummitSplit v2','configs/Hyprnerd-Desktop']:
         load_jsonc(R/'home/.config/hypr/waybar'/name)
     for path in (R/'home/.config/hypr/wallust').glob('*.toml'):tomllib.loads(path.read_text())
+    with tempfile.TemporaryDirectory(prefix='hyprnerd-tests-') as temporary:
+        subprocess.run([shutil.which('lua5.4') or 'lua',str(R/'tests/desktop.lua'),str(R/'home/.config/hypr/lua/hyprnerd_desktop.lua'),temporary],check=True)
     print(f'PASS: {len(manifest)} assets, {len(python)} Python files, {len(shell)} shell scripts, {len(lua)} Lua files, JSON/TOML, public-content checks')
 if __name__=='__main__':main()

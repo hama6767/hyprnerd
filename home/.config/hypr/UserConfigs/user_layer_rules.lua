@@ -52,3 +52,5 @@ local apply_layer_rule = user_layer_rules_helper.apply_layer_rule
 -- Ubuntu notification-center and power-menu surface names.
 apply_layer_rule({ name = "ubuntu-swaync-control-blur", match = { namespace = "swaync-control-center" }, blur = true, ignore_alpha = 0 })
 apply_layer_rule({ name = "ubuntu-wlogout-blur", match = { namespace = "wlogout" }, blur = true, ignore_alpha = 0 })
+
+apply_layer_rule({ name = "hyprnerd-dock", match = { namespace = "nwg-dock" }, blur = true, ignore_alpha = 0 })

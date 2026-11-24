@@ -23,7 +23,7 @@ def palette():
   assert (H/'.config/hypr'/rel).read_bytes()==(R/'home/.config/hypr/reference-palette'/rel).read_bytes(),rel
  return 'Exact reference palette in all three consumers'
 def kitty():
- out=call('kitty','+runpy','from kitty.config import load_config; import json,os; bad=[]; o=load_config(os.path.expanduser("~/.config/kitty/kitty.conf"),accumulate_bad_lines=bad); print(json.dumps({"errors":str(bad),"font":o.font_family,"size":o.font_size,"opacity":o.background_opacity}))')
+ out=call('kitty','+runpy','from kitty.config import load_config; import json,os; bad=[]; o=load_config(os.path.expanduser("~/.config/kitty/kitty.conf"),accumulate_bad_lines=bad); print(json.dumps({"errors":str(bad),"font":str(o.font_family),"size":o.font_size,"opacity":o.background_opacity}))')
  obj=json.loads(out);assert obj['errors']=='[]' and obj['size']==12 and obj['opacity']==.9,obj
  return obj
 def fonts():
@@ -45,7 +45,7 @@ def live():
   for level,items in info['levels'].items():
    for item in items:
     if item['namespace'] in ['topbar','bottombar']:bars.append({'monitor':monitor,'name':item['namespace'],'height':item['h']})
- assert len(bars)>=2 and all(x['height']==30 for x in bars),bars
+ assert bars and all(x['name']=='topbar' and x['height']==30 for x in bars),bars
  opacity={}
  for c in json.loads(call('hyprctl','-j','clients')):
   if c['class'] not in ['firefox_firefox','kitty']:continue

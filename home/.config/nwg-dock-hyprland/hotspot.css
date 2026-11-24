@@ -1,0 +1,3 @@
+window { all: unset; background: transparent; }
+#hotspot-box { min-height: 6px; }
+#detector-box { min-height: 16px; }

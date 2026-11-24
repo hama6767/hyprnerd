@@ -144,3 +144,37 @@ unbind("SUPER CTRL", "A")
 bind("SUPER CTRL", "A", exec_cmd("$HOME/.config/hypr/scripts/OverviewToggle.sh"), { description = "desktop overview" })
 unbind("SUPER", "B")
 bind("SUPER", "B", exec_cmd("firefox"), { description = "open browser" })
+-- Reuse Kitty's renderer and font cache for additional terminal windows.
+unbind("SUPER", "Return")
+bind("SUPER", "Return", exec_cmd("kitty --single-instance --instance-group hyprnerd-fast"), { description = "Open terminal (shared Kitty instance)" })
+
+-- Hyprnerd: workspace changes act on the complete desktop across all outputs.
+local function desktop(fn)
+  return function() if HYPRNERD_DESKTOP then fn(HYPRNERD_DESKTOP) end end
+end
+local function replace(mods,key,fn,description)
+  unbind(mods,key);bind(mods,key,desktop(fn),{description=description})
+end
+replace("SUPER ALT","SPACE",function(d) d.toggle_mode() end,"toggle window / tile mode")
+for _,key in ipairs({"tab","period","mouse_down"}) do
+  replace("SUPER",key,function(d) d.step(1) end,"next desktop on all displays")
+end
+for _,key in ipairs({"comma","mouse_up"}) do
+  replace("SUPER",key,function(d) d.step(-1) end,"previous desktop on all displays")
+end
+replace("SUPER SHIFT","tab",function(d) d.step(-1) end,"previous desktop on all displays")
+replace("SUPER CTRL","right",function(d) d.step(1) end,"next desktop on all displays")
+replace("SUPER CTRL","left",function(d) d.step(-1) end,"previous desktop on all displays")
+replace("SUPER CTRL","N",function(d) d.new_workspace() end,"add desktop")
+for id=1,10 do
+  local target=id
+  local key="code:" .. (id+9)
+  replace("SUPER",key,function(d) d.switch(target) end,"desktop " .. id .. " on all displays")
+  replace("SUPER SHIFT",key,function(d) d.move(target,true) end,"move window to desktop " .. id)
+  replace("SUPER CTRL",key,function(d) d.move(target,false) end,"move window silently to desktop " .. id)
+end
+for _,item in ipairs({{"bracketleft",-1},{"bracketright",1}}) do
+  local delta=item[2]
+  replace("SUPER SHIFT",item[1],function(d) d.move_step(delta,true) end,"move window to adjacent desktop")
+  replace("SUPER CTRL",item[1],function(d) d.move_step(delta,false) end,"move window silently to adjacent desktop")
+end

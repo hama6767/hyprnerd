@@ -278,3 +278,9 @@ tooltip {
     color: #ffd700;}
 
 #custom-capslock { color: #e5d9f5; padding: 0 6px; }
+
+#custom-desktops { color: #72c8c8; padding: 0 10px; font-weight: bold; }
+#custom-desktop-prev, #custom-desktop-next, #custom-desktop-add { color: #fcf6f3; padding: 0 9px; }
+#custom-desktop-add { color: #fdb417; }
+#custom-window-mode { padding: 0 9px; color: #72c8c8; }
+#custom-window-mode.floating { color: #fdb417; }

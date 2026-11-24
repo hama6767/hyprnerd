@@ -3,7 +3,7 @@
 import argparse, datetime, hashlib, json, os, pathlib, shutil, subprocess, tempfile
 R=pathlib.Path(__file__).resolve().parent
 H=pathlib.Path.home()
-ROOTS=['.config/hypr','.config/waybar','.config/rofi','.config/wallust','.config/swaync','.config/wlogout','.config/quickshell','.config/Kvantum','.config/cava','.config/swappy','.config/kitty/kitty.conf','.config/fastfetch/kool.jsonc','.config/gtk-3.0/settings.ini','.config/gtk-4.0/settings.ini','.config/qt5ct/qt5ct.conf','.config/qt6ct/qt6ct.conf','.config/xsettingsd/xsettingsd.conf','.config/fontconfig/conf.d/05-kool-reference.conf','.config/bashrc/kool-terminal.bash','.icons/default/index.theme','.local/share/themes/Kali-Dark','.local/share/icons/Flat-Remix-Blue-Dark','.local/share/fonts/kool-reference','Pictures/wallpapers/wall_anime_4K.png']
+ROOTS=['.config/nwg-dock-hyprland','.config/hypr','.config/waybar','.config/rofi','.config/wallust','.config/swaync','.config/wlogout','.config/quickshell','.config/Kvantum','.config/cava','.config/swappy','.config/kitty/kitty.conf','.config/fastfetch/kool.jsonc','.config/gtk-3.0/settings.ini','.config/gtk-4.0/settings.ini','.config/qt5ct/qt5ct.conf','.config/qt6ct/qt6ct.conf','.config/xsettingsd/xsettingsd.conf','.config/fontconfig/conf.d/05-kool-reference.conf','.config/bashrc/kool-terminal.bash','.icons/default/index.theme','.local/share/themes/Kali-Dark','.local/share/icons/Flat-Remix-Blue-Dark','.local/share/fonts/kool-reference','Pictures/wallpapers/wall_anime_4K.png']
 GSET={'gtk-theme':'Kali-Dark','icon-theme':'Flat-Remix-Blue-Dark','font-name':'Adwaita Sans 11','cursor-theme':'Adwaita','cursor-size':24,'color-scheme':'prefer-dark'}
 def exists(p):return p.exists() or p.is_symlink()
 def rm(p):
@@ -69,7 +69,7 @@ def main(argv=None):
         else:restore(backup,reload=not a.no_reload)
         raise SystemExit()
     if not (a.apply or a.check):p.error('Choose --check or --apply (or --restore BACKUP)')
-    required=['hyprctl','Hyprland','kitty','waybar','rofi','swaync','jq','gsettings','fc-cache','awww','awww-daemon']
+    required=['hyprctl','Hyprland','kitty','waybar','rofi','swaync','jq','gsettings','fc-cache','awww','awww-daemon','nwg-dock-hyprland']
     missing=[c for c in required if not shutil.which(c)]
     if missing:raise SystemExit('Missing prerequisites: '+', '.join(missing))
     v=run(['Hyprland','--version']).stdout

@@ -26,11 +26,6 @@
     "bars": [
       {
         "monitor": "HDMI-A-1",
-        "name": "bottombar",
-        "height": 30
-      },
-      {
-        "monitor": "HDMI-A-1",
         "name": "topbar",
         "height": 30
       }
@@ -56,10 +51,30 @@
     "plugin": "Ubuntu qt5-style-kvantum 1.0.10 / qt5ct 1.5"
   },
   "qt6_probe": "Qt6 loaded user-local libkvantum.so and system qt6ct platform theme",
-  "visual": "Inspected the wallpaper, translucent terminal, rounded cyan borders and both 30px bars",
+  "visual": "Reference wallpaper and palette, translucent rounded windows, 30px top bar and bottom edge auto-hidden Dock",
   "not_exercised": [
     "Logging out or rebooting",
     "Locking or suspending the live session",
     "Full OS provisioning on a clean machine"
-  ]
+  ],
+  "desktop_controller": {
+    "window_modes": "passed with config reload",
+    "workspace_sync": "passed on 1, 2 and 3 outputs",
+    "native_activation": "passed",
+    "unplug_rehome": "passed"
+  },
+  "terminal_latency": {
+    "method": "Three temporary windows launched via the compositor; measured until client appears in hyprctl clients. Animations retained.",
+    "before_ms": [
+      769,
+      741,
+      706
+    ],
+    "kitty_0_51_1_ms": [
+      177,
+      43,
+      45
+    ],
+    "note": "First window creates renderer; subsequent windows share its process. Prompt readiness is a separate measurement."
+  }
 }

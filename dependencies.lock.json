@@ -35,14 +35,25 @@
   },
   "reference": {
     "dots": "JaKooLit 2.3.17",
-    "hyprland": "0.52.1"
+    "hyprland": "0.52.1",
+    "kitty": "0.44.0"
   },
   "target": {
     "hyprland": "0.57.2",
-    "kitty": "0.32.2",
+    "kitty": "0.51.1",
     "waybar": "0.16.0",
     "rofi": "1.7.5",
     "wallust": "3.5.2",
     "awww": "0.12.1"
+  },
+  "dock": {
+    "project": "https://github.com/nwg-piotr/nwg-dock-hyprland",
+    "version": "0.4.11",
+    "required": true
+  },
+  "kitty_binary": {
+    "version": "0.51.1",
+    "url": "https://github.com/kovidgoyal/kitty/releases/download/v0.51.1/kitty-0.51.1-x86_64.txz",
+    "sha256": "d309be978f017dbdcccae175d281092fefe7c8bc64478fa620581604ab0b53c0"
   }
 }
