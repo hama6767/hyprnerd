@@ -29,6 +29,14 @@ class BootstrapTests(unittest.TestCase):
         text=b.quiet_shell("if true; then\nfastfetch\nfi\n")
         subprocess.run(["bash","-n"],input=text,text=True,check=True)
         self.assertNotIn("fastfetch",text)
+    def test_legacy_snapshot_preserves_original_and_redirects_sources(self):
+        spec=importlib.util.spec_from_file_location('legacy',b.R/'scripts/prepare-legacy-session.py');legacy=importlib.util.module_from_spec(spec);spec.loader.exec_module(legacy)
+        d=self.home/'.config/hypr';d.mkdir(parents=True);original='source = $HOME/.config/hypr/UserConfigs/input.conf\n';(d/'hyprland.conf').write_text(original)
+        (d/'UserConfigs').mkdir();(d/'UserConfigs/input.conf').write_text('input { kb_layout = ee }\n')
+        with patch.object(legacy,'H',self.home):legacy.main(['--apply'])
+        snapshots=list((self.home/'.local/state/hyprnerd/legacy-sessions').iterdir());self.assertEqual(len(snapshots),1)
+        self.assertEqual((d/'hyprland.conf').read_text(),original);self.assertIn(str(snapshots[0]),(snapshots[0]/'hyprland.conf').read_text())
+        self.assertIn(str(snapshots[0]),(self.home/'.local/state/hyprnerd/legacy-entry.conf').read_text())
     def test_arch_package_plan_is_full_upgrade(self):
         command=b.package_commands('arch')[0];self.assertIn('-Syu',command);self.assertIn('fcitx5-mozc',command)
 if __name__=='__main__':unittest.main()

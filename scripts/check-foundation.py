@@ -3,7 +3,7 @@
 import json,os,pathlib,subprocess,sys,tempfile
 H=pathlib.Path.home()
 def call(*args):return subprocess.check_output(args,text=True,stderr=subprocess.STDOUT).strip()
-for executable,flag in [('nvim','--version'),('lazygit','--version'),('atuin','--version'),('lazydon','--help'),('tree-sitter','--version')]:
+for executable,flag in [('nvim','--version'),('lazygit','--version'),('atuin','--version'),('lazydon','--help'),('tree-sitter','--version'),('rg','--version'),('fd','--version')]:
     out=call(str(H/'.local/bin'/executable),flag);assert out;print('PASS',executable,out.splitlines()[0])
 with tempfile.TemporaryDirectory(prefix='hyprnerd-check-') as temporary:
     marker=pathlib.Path(temporary)/'editor.json'

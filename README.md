@@ -58,6 +58,17 @@ python3 install.py --profile ubuntu-desktop --apply
 - `--check` は差分表示のみ。`--apply` は `~/.local/state/kool-dotfiles/backups/<日時>/` へ退避後、構文検証してログアウトせずに即時反映します。
 - `generic` で既存設定の形式が異なる場合は、先に `home/.config/hypr/UserConfigs/user_settings.lua` と `monitors.lua` を編集してください。
 
+### 旧Hyprlandからの移行
+
+Archの古いセッションを更新する場合は、OS全体の更新と必要なデスクトップ依存の導入後、設定を退避してから適用します。稼働中の旧セッションへ新しいLua設定は読み込ませません。
+
+```bash
+python3 scripts/prepare-legacy-session.py --apply
+python3 install.py --profile arch-laptop --apply --no-reload --keep-legacy-session
+```
+
+`arch-laptop` は参照機のIntel / eDP-1 / Estonianキーボード用です。別PCでは `generic` とそのPCの入力・モニター設定を使用してください。旧設定は `~/.local/state/hyprnerd/legacy-sessions/` に保持し、互換用 `hyprland.conf` を残します。次回ログインからHyprland 0.57が `hyprland.lua` を使用します。カーネル更新後は再起動が必要です。
+
 ## 主な操作
 
 上部 Waybar の `Tile` / `Window` で全体のタイル／自由配置を切り替えられます（再起動後も保持）。ワークスペースは全モニター連動で切り替わり、画面下端中央へのカーソル移動で自動非表示 Dock が現れます。

@@ -4,8 +4,8 @@ import argparse,configparser,datetime,gzip,hashlib,io,json,os,pathlib,platform,r
 R=pathlib.Path(__file__).resolve().parent
 H=pathlib.Path.home()
 PACKAGES={
- 'ubuntu':['ca-certificates','curl','git','build-essential','unzip','ripgrep','fd-find','fzf','libcurl4t64','libssl3t64','fcitx5','fcitx5-mozc','fcitx5-frontend-gtk3','fcitx5-frontend-gtk4','fcitx5-frontend-qt5','fcitx5-frontend-qt6','fonts-noto-cjk'],
- 'arch':['ca-certificates','curl','git','base-devel','unzip','ripgrep','fd','fzf','openssl','fcitx5','fcitx5-mozc','fcitx5-gtk','fcitx5-qt','noto-fonts-cjk'],
+ 'ubuntu':['ca-certificates','curl','git','build-essential','unzip','fzf','libcurl4t64','libssl3t64','fcitx5','fcitx5-mozc','fcitx5-frontend-gtk3','fcitx5-frontend-gtk4','fcitx5-frontend-qt5','fcitx5-frontend-qt6','fonts-noto-cjk'],
+ 'arch':['ca-certificates','curl','git','base-devel','unzip','fzf','openssl','fcitx5','fcitx5-mozc','fcitx5-gtk','fcitx5-qt','noto-fonts-cjk'],
 }
 def run(args,**kwargs):return subprocess.run(args,check=True,**kwargs)
 def os_family(path=pathlib.Path('/etc/os-release')):
