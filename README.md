@@ -1,4 +1,10 @@
-# Arch KooL appearance for Hyprland 0.57
+# hyprnerd
+
+[![CI](https://github.com/hama6767/hyprnerd/actions/workflows/ci.yml/badge.svg)](https://github.com/hama6767/hyprnerd/actions/workflows/ci.yml)
+
+Reproducible KooL-inspired Hyprland 0.57 dotfiles, with a faithful Arch appearance port for Ubuntu.
+
+![Desktop preview](docs/preview.png)
 
 個人用Arch環境の **JaKooLit v2.3.17の実際の見た目**を、Ubuntu 24.04 / Hyprland 0.57.2のLua設定へ移植したdotfilesです。新しいKooLの既定テーマではなく、参照機の壁紙・生成済み配色・上下バー・透過率・実効フォントを収録しています。
 
@@ -6,7 +12,7 @@
 
 ## 再適用
 
-既存のHyprland 0.57.xセッションで、リポジトリのルートから実行します。インストール先は実行ユーザーのホームです。sudoは使用しません。
+まず `git clone https://github.com/hama6767/hyprnerd.git && cd hyprnerd` で取得します。既存のHyprland 0.57.xセッションで、リポジトリのルートから実行します。インストール先は実行ユーザーのホームです。sudoは使用しません。
 
 ```bash
 # Ubuntu 24.04 amd64: Qt5/Qt6用プラグインを取得・SHA-256照合してユーザー領域に配置
@@ -85,3 +91,24 @@ python3 install.py --profile ubuntu-desktop --check
 - [Kvantum](https://github.com/tsujan/Kvantum): Qt Widgetsテーマエンジン。Ubuntu Qt6パッケージは公式導入案内に記載されたPapirus PPAより取得。
 - [Flat Remix](https://github.com/daniruiz/flat-remix)、[Catppuccin Kvantum](https://github.com/catppuccin/kvantum)、Kali-Dark、Adwaita/Noto/Fira/JetBrains/Victorフォントは各作者の資材です。取得できたライセンス本文を `licenses/` に保持しています。
 - 壁紙と参照側テーマはユーザー所有環境から提供された個人用スナップショットです。SSH接続情報や認証情報はこのリポジトリに含めません。
+
+## CI/CD
+
+Pushes and pull requests run Python 3.12/3.13 installer tests, asset checksum/link checks, JSON/TOML validation, and Bash/Lua syntax checks on Ubuntu 24.04. The tests exercise check/apply/idempotency/rollback in temporary homes with simulated desktop commands; they do not modify a live desktop. Live Hyprland visual validation remains a separate `scripts/validate.py` check.
+
+Successful `main` builds upload a `hyprnerd` archive and SHA-256 checksum as Actions artifacts. Pushing a semantic version tag such as `v0.1.0` reruns the same checks and publishes a GitHub Release with the archive and checksum. Release archives are generated from tracked Git files, including dotfiles and symlinks, and exclude local caches and credentials. Releases do not apply settings to anyone's computer automatically.
+
+```bash
+python3 scripts/ci.py
+python3 -m unittest discover -s tests -v
+python3 scripts/package.py --version 0.1.0
+# After committing and pushing main, publish a release:
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+GitHub Actions are pinned to commit SHAs and updated through monthly Dependabot pull requests. Validation jobs have read-only repository access; only the tag release job has `contents: write`.
+
+## Licensing
+
+The installer, integration code, and KooL-derived configuration are distributed under GPL-3.0-or-later; see `LICENSE`. Third-party fonts, icons, themes, and artwork retain their own licences and copyright. `THIRD_PARTY.md` records their provenance; the repository-wide code licence does not relicense those assets.
