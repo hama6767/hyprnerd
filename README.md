@@ -24,7 +24,7 @@ Neovim 0.12.6、LazyVim、lazygit 0.66.3、LazyDon 0.1.4、Atuin 18.25.1、tree-
 
 Fcitx5 + Mozcと日本語フォントもパッケージから導入し、`Ctrl+Space` で日本語入力を切り替えます。既存のキーボードグループとGTKテーマは維持します。Hyprland 0.57用の起動処理とキー割り当てはデスクトップ設定に含みます。入力方式を読み込んでいない既存アプリは再起動してください。
 
-Bash起動時のFastfetch／Neofetchは実行しません。Atuinはシェルへ組み込みますが、アカウント登録やクラウド同期の新規設定はしません。既存のAtuin設定・履歴、LazyDonのアカウントはリポジトリに含めません。Atuinの既存DBは更新前にSQLiteのオンラインバックアップを取ります。
+Bash起動時のFastfetch／Neofetchは実行しません。AtuinはBashと既存のZsh設定へ組み込みますが、アカウント登録やクラウド同期の新規設定はしません。既存のAtuin設定・履歴、LazyDonのアカウントはリポジトリに含めません。Atuinの既存DBは更新前にSQLiteのオンラインバックアップを取ります。
 
 既存のLazyVimは独自プラグインと設定を保持し、相対行番号だけ追加します。他のNeovim設定は退避してから同梱の最小構成を配置します。変更前の設定・リンク・DBは `~/.local/state/hyprnerd/bootstrap-backups/日時/` に保存します。必要なパッケージが導入済みなら `--skip-packages`、プラグイン取得を次回起動まで遅らせるなら `--skip-plugins`、GUIの入力エンジンを起動しないなら `--no-session` を付けます。`--check` は読み取り専用です。
 

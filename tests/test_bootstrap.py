@@ -15,6 +15,12 @@ class BootstrapTests(unittest.TestCase):
         d=self.home/'.config/nvim';(d/'lua/config').mkdir(parents=True);(d/'lua/config/lazy.lua').write_text('-- LazyVim/LazyVim\n-- custom configuration\n');(d/'lua/config/options.lua').write_text('vim.opt.tabstop = 8\n')
         b.configure_nvim(self.backup);first=(d/'lua/config/options.lua').read_text();b.configure_nvim(self.backup)
         self.assertEqual(first,(d/'lua/config/options.lua').read_text());self.assertIn('tabstop = 8',first);self.assertIn('relativenumber = true',first);self.assertIn('custom configuration',(d/'lua/config/lazy.lua').read_text())
+    def test_existing_zsh_setup_gets_atuin_without_losing_plugins(self):
+        p=self.home/'.zshrc';p.write_text('source $ZSH/oh-my-zsh.sh\nfastfetch\neval "$(atuin init zsh)"\n')
+        b.configure_shell(self.backup);first=p.read_text();b.configure_shell(self.backup)
+        self.assertEqual(first,p.read_text());self.assertIn('source $ZSH/oh-my-zsh.sh',first)
+        self.assertNotIn('fastfetch',first);self.assertIn('$HOME/.local/bin/atuin',first)
+        self.assertIn('$+functions[_atuin_preexec]',first)
     def test_other_editor_config_is_backed_up(self):
         d=self.home/'.config/nvim';d.mkdir(parents=True);(d/'init.vim').write_text('set number\n')
         b.configure_nvim(self.backup)

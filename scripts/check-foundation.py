@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Exercise installed tools and editor configuration without touching real accounts."""
-import json,os,pathlib,subprocess,sys,tempfile
+import json,os,pathlib,shutil,subprocess,sys,tempfile
 H=pathlib.Path.home()
 def call(*args):return subprocess.check_output(args,text=True,stderr=subprocess.STDOUT).strip()
 for executable,flag in [('nvim','--version'),('lazygit','--version'),('atuin','--version'),('lazydon','--help'),('tree-sitter','--version'),('rg','--version'),('fd','--version')]:
@@ -14,6 +14,9 @@ with tempfile.TemporaryDirectory(prefix='hyprnerd-check-') as temporary:
     script='eval "$(atuin init bash)"; [[ ${__atuin_initialized-} == true ]]'
     subprocess.run(['bash','--noprofile','--norc','-ic',script],env=env,check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=30)
     print('PASS Atuin Bash integration in an isolated home')
+    if shutil.which('zsh'):
+        subprocess.run(['zsh','-dfi','-c','eval "$(atuin init zsh)"; (( $+functions[_atuin_preexec] ))'],env=env,check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=30)
+        print('PASS Atuin Zsh integration in an isolated home')
 profile=(H/'.config/fcitx5/profile').read_text();config=(H/'.config/fcitx5/config').read_text()
 assert 'mozc' in profile and 'Control+space' in config
 assert pathlib.Path('/usr/share/fcitx5/inputmethod/mozc.conf').exists()

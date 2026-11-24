@@ -59,7 +59,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Prepare Arch container
-        run: pacman -Syu --noconfirm --needed python git ca-certificates lua
+        run: pacman -Syu --noconfirm --needed python git ca-certificates lua zsh
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false

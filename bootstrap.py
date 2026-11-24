@@ -89,6 +89,12 @@ def configure_shell(backup):
     text=re.sub(r'eval\s+"\$\(atuin init bash\)"','eval "$("$HOME/.local/bin/atuin" init bash)"',text)
     body='export PATH="$HOME/.local/bin:$PATH"\nif [[ $- == *i* && ${__atuin_initialized-} != true ]]; then\n    eval "$(atuin init bash)"\nfi'
     backup.write(p,replace_block(text,'HYPRNERD SHELL',body).encode())
+    zshrc=H/'.zshrc'
+    if zshrc.exists() or pathlib.Path(os.environ.get('SHELL','')).name=='zsh':
+        text=quiet_shell(zshrc.read_text() if zshrc.exists() else '')
+        text=re.sub(r'eval\s+"\$\(atuin init zsh\)"','eval "$("$HOME/.local/bin/atuin" init zsh)"',text)
+        body='export PATH="$HOME/.local/bin:$PATH"\nif [[ -o interactive ]] && (( ! $+functions[_atuin_preexec] )); then\n    eval "$(atuin init zsh)"\nfi'
+        backup.write(zshrc,replace_block(text,'HYPRNERD SHELL',body).encode())
     hook=H/'.config/bashrc/kool-terminal.bash'
     backup.write(hook,(R/'home/.config/bashrc/kool-terminal.bash').read_bytes())
     # No account registration or sync settings: existing Atuin history remains in place.
