@@ -167,5 +167,12 @@
     "reproduction": "Wayland virtual keyboard Super+Left and Super+H remained focused after release. With follow_mouse=1, a Wayland pointer movement onto the previous output took keyboard focus back.",
     "fix": "follow_mouse=2, float_switch_override_focus=0, mouse_move_focuses_monitor=false, applied after host input settings.",
     "verification": "The same keyboard/pointer sequence retained window and monitor focus for tiled and floating targets; a left click selected the hovered window and output. Desktop groups were unchanged; test windows were removed and the original desktop restored. After persistent configuration was reloaded, selection of an empty output survived pointer movement to another output, and a new shared-instance Kitty opened on the selected empty output. Both hosts had no config errors and unchanged animation settings."
+  },
+  "monitor_reload_loop_fix": {
+    "date": "2026-11-26",
+    "cause": "On Arch, MonitorWatcher handled configreloaded by invoking the explicit named-layout apply path. That path replaced monitors.lua even for identical bytes, causing another compositor reload every 2-3 seconds.",
+    "fix": "Watcher uses reapply; named reapply preserves the layout name and passes no-persist. Atomic writes retain the existing file when content is identical.",
+    "regression_test": "Real controller and watcher scripts with a fake compositor: identical explicit apply preserves inode/mtime; named reapply after a changed store also preserves config inode/mtime and layout identity.",
+    "live_verification": "Arch: exactly one configreloaded event after an explicit reload during a 25-second observation, unchanged monitors.lua inode/mtime, unchanged three-output geometry, no config errors. Real user Super+Left events moved from DP-3 through eDP-1 to DP-2 without an unsolicited focus event."
   }
 }

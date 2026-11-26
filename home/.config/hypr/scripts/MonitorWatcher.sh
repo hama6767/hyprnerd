@@ -290,7 +290,9 @@ apply_current() {
   fi
   if [[ -n $name && $name != "(auto)" ]]; then
     log "config reloaded; re-applying $name"
-    if "$MW_PROFILE_SCRIPT" -- "$name" 9>&-; then return 0; fi
+    # Reapplication is automatic. The explicit named-layout command persists
+    # monitors.lua, whose write triggers configreloaded again indefinitely.
+    if "$MW_PROFILE_SCRIPT" reapply 9>&-; then return 0; fi
     log "WARN: re-applying $name failed; falling back to auto"
   elif [[ $name == "(auto)" && -n $recorded && -f $MW_STATE_DIR/active-layout.json ]]; then
     layout_fp="$(head -n1 -- "$MW_STATE_DIR/active-layout.fingerprint" 2>/dev/null || true)"

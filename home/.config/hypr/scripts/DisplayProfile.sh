@@ -335,6 +335,12 @@ dp_write_file() {
   local path=$1 tmp
   tmp="$(mktemp -- "$(dirname -- "$path")/.$(basename -- "$path").XXXXXX")" || return 1
   if cat >"$tmp"; then
+    # Replacing even identical bytes triggers Hyprland's config file watcher.
+    # Keep the inode/mtime when nothing changed to avoid needless reloads.
+    if [[ -f $path ]] && cmp -s -- "$tmp" "$path"; then
+      rm -f -- "$tmp"
+      return 0
+    fi
     mv -f -- "$tmp" "$path"
     return 0
   fi
@@ -753,7 +759,7 @@ dp_cleanup_legacy() {
 
 # --- Verbs -----------------------------------------------------------------
 dp_apply_named() {
-  local name=$1 norm fp layout tmp
+  local name=$1 persist=${2-persist} norm fp layout tmp
   ds_name_valid "$name" || die "not a usable layout name: $name"
   norm="$(dp_monitors)" || return 1
   [[ "$(ds_count "$norm")" -gt 0 ]] || { log "no monitors connected; nothing to do"; return 0; }
@@ -773,9 +779,9 @@ dp_apply_named() {
   printf '%s\n' "$fp" >"$STATE_DIR/active-layout.fingerprint"
   rm -f -- "$tmp"
   log "applying layout $name"
-  # An explicit apply is what the user asked for, so it is the one path allowed
-  # to write UserConfigs/monitors.lua.
-  if dp_apply_layout "$layout" "$fp" "$name" persist; then
+  # An explicit selection persists; automatic reapplication must not write a
+  # watched config file and feed another configreloaded event to the watcher.
+  if dp_apply_layout "$layout" "$fp" "$name" "$persist"; then
     dp_state_write "$fp" "$name"
     log "layout $name is active"
     return 0
@@ -839,13 +845,20 @@ dp_auto() {
 # Falls back to `auto` when the recorded layout is not for this monitor set, is
 # missing, or is no longer usable, so this can never leave the displays alone.
 dp_reapply() {
-  local norm fp recorded layout
+  local norm fp recorded layout current_fp name
   norm="$(dp_monitors)" || return 1
   if [[ "$(ds_count "$norm")" -eq 0 ]]; then
     log "no monitors connected; nothing to re-apply"
     return 0
   fi
   fp="$(ds_fingerprint "$norm")"
+  current_fp="$(sed -n '1p' -- "$STATE_FILE" 2>/dev/null || true)"
+  name="$(sed -n '2p' -- "$STATE_FILE" 2>/dev/null || true)"
+  if [[ $current_fp == "$fp" && -n $name && $name != "(auto)" ]]; then
+    log "re-applying named layout $name without rewriting monitor config"
+    if dp_apply_named "$name" no-persist; then return 0; fi
+    log "WARN: named layout is unavailable; trying the recorded layout"
+  fi
   recorded="$(head -n1 -- "$STATE_DIR/active-layout.fingerprint" 2>/dev/null || true)"
   layout="$STATE_DIR/active-layout.json"
   if [[ -n $recorded && $recorded == "$fp" && -f $layout ]] \

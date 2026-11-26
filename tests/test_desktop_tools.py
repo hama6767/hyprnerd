@@ -72,6 +72,26 @@ class DisplayImportTests(unittest.TestCase):
         store=json.loads((user/'display-layouts.json').read_text());saved=next(iter(store['fingerprints'].values()))
         self.assertEqual(saved['default'],'nwg-displays');self.assertEqual(saved['layouts']['nwg-displays']['monitors'][0]['vrr'],0)
         self.assertIn('vrr = 0',(self.root/'commands').read_text())
+        # Re-selecting identical settings must not trigger the compositor's
+        # file watcher: both inode and nanosecond mtime remain unchanged.
+        unchanged=(manual.stat().st_ino,manual.stat().st_mtime_ns)
+        result=subprocess.run(['bash',str(S/'DisplayProfile.sh'),'--','nwg-displays'],env=env,text=True,capture_output=True)
+        self.assertEqual(result.returncode,0,result.stderr)
+        self.assertEqual((manual.stat().st_ino,manual.stat().st_mtime_ns),unchanged)
+        # The event watcher must use the non-persisting path even when the
+        # store renders different config bytes. Otherwise each configreloaded
+        # event writes monitors.lua and causes the next configreloaded event.
+        saved['layouts']['nwg-displays']['monitors'][0]['vrr']=1
+        (user/'display-layouts.json').write_text(json.dumps(store))
+        events=self.root/'events';events.write_text('configreloaded>>\n')
+        watcher_env=dict(env,MW_PROFILE_SCRIPT=str(S/'DisplayProfile.sh'),MW_RUNTIME_DIR=env['DP_RUNTIME_DIR'],MW_EVENT_FILE=str(events),MW_MAX_RECONNECTS='0',MW_NWG_PROC='',MW_NWG_CONF=str(self.conf))
+        result=subprocess.run(['bash',str(S/'MonitorWatcher.sh')],env=watcher_env,text=True,capture_output=True,timeout=15)
+        self.assertEqual(result.returncode,0,result.stderr)
+        self.assertIn('without rewriting monitor config',result.stderr)
+        self.assertEqual((manual.stat().st_ino,manual.stat().st_mtime_ns),unchanged)
+        self.assertIn('vrr = 0',manual.read_text())
+        current=pathlib.Path(env['DP_RUNTIME_DIR'])/'kooldots-display-profiles/current'
+        self.assertEqual(current.read_text().splitlines()[1],'nwg-displays')
         # No runtime state: a fresh session must resolve the saved arrangement.
         env['DP_RUNTIME_DIR']=str(self.root/'new-session')
         result=subprocess.run(['bash',str(S/'DisplayProfile.sh'),'auto'],env=env,text=True,capture_output=True)
