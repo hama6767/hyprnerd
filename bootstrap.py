@@ -87,17 +87,31 @@ def configure_shell(backup):
     text=quiet_shell(text)
     # Use the installed binary even when an old Atuin installer prepends ~/.atuin/bin.
     text=re.sub(r'eval\s+"\$\(atuin init bash\)"','eval "$("$HOME/.local/bin/atuin" init bash)"',text)
-    body='export PATH="$HOME/.local/bin:$PATH"\nif [[ $- == *i* && ${__atuin_initialized-} != true ]]; then\n    eval "$(atuin init bash)"\nfi'
+    shell_hook='[ ! -r "$HOME/.config/shell/hyprnerd-tools.sh" ] || . "$HOME/.config/shell/hyprnerd-tools.sh"'
+    body='export PATH="$HOME/.local/bin:$PATH"\n'+shell_hook+'\nif [[ $- == *i* && ${__atuin_initialized-} != true ]]; then\n    eval "$(atuin init bash)"\nfi'
     backup.write(p,replace_block(text,'HYPRNERD SHELL',body).encode())
     zshrc=H/'.zshrc'
     if zshrc.exists() or pathlib.Path(os.environ.get('SHELL','')).name=='zsh':
         text=quiet_shell(zshrc.read_text() if zshrc.exists() else '')
         text=re.sub(r'eval\s+"\$\(atuin init zsh\)"','eval "$("$HOME/.local/bin/atuin" init zsh)"',text)
-        body='export PATH="$HOME/.local/bin:$PATH"\nif [[ -o interactive ]] && (( ! $+functions[_atuin_preexec] )); then\n    eval "$(atuin init zsh)"\nfi'
+        body='export PATH="$HOME/.local/bin:$PATH"\n'+shell_hook+'\nif [[ -o interactive ]] && (( ! $+functions[_atuin_preexec] )); then\n    eval "$(atuin init zsh)"\nfi'
         backup.write(zshrc,replace_block(text,'HYPRNERD SHELL',body).encode())
     hook=H/'.config/bashrc/kool-terminal.bash'
     backup.write(hook,(R/'home/.config/bashrc/kool-terminal.bash').read_bytes())
+    hook=H/'.config/shell/hyprnerd-tools.sh'
+    backup.write(hook,(R/'home/.config/shell/hyprnerd-tools.sh').read_bytes())
+    backup.write(H/'.config/environment.d/60-hyprnerd-editor.conf',b'EDITOR=nvim\nVISUAL=nvim\n')
     # No account registration or sync settings: existing Atuin history remains in place.
+def configure_spf(backup):
+    import tomllib
+    path=H/'.config/superfile/config.toml'
+    text=path.read_text() if path.exists() else (R/'foundation/superfile/config.toml').read_text()
+    tomllib.loads(text)
+    for key,value in [('editor','"nvim"'),('dir_editor','"nvim"'),('cd_on_quit','true')]:
+        pattern=r'(?m)^'+key+r'\s*=.*$'
+        if re.search(pattern,text):text=re.sub(pattern,key+' = '+value,text)
+        else:text=key+' = '+value+'\n'+text
+    backup.write(path,text.encode())
 def configure_nvim(backup):
     dest=H/'.config/nvim';source=R/'foundation/nvim'
     lazy_config=dest/'lua/config/lazy.lua'
@@ -172,7 +186,7 @@ def main(argv=None):
     for name,spec in lock['foundation_tools'].items():install_tool(name,spec,backup)
     os.environ['PATH']=str(H/'.local/bin')+':'+os.environ.get('PATH','')
     if not shutil.which('fd') and shutil.which('fdfind'):backup.link(H/'.local/bin/fd',pathlib.Path(shutil.which('fdfind')))
-    configure_shell(backup);configure_nvim(backup)
+    configure_shell(backup);configure_nvim(backup);configure_spf(backup)
     if not a.no_session and os.environ.get("HYPRLAND_INSTANCE_SIGNATURE"):
         subprocess.run(["fcitx5-remote","-e"],check=False,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     configure_input(backup)

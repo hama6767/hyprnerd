@@ -132,17 +132,14 @@ arrange_monitors() {
     notify "Display layouts" "Install nwg-displays to arrange monitors by dragging"
     return 1
   fi
-  if [[ $DRY_RUN -eq 1 ]]; then printf 'DRY: %s -m <discard>\n' "$DPM_NWG_DISPLAYS"; return 0; fi
+  if [[ $DRY_RUN -eq 1 ]]; then printf 'DRY: %s -m %s\n' "$DPM_NWG_DISPLAYS" "$config_home/hypr/monitors.conf"; return 0; fi
   mkdir -p -- "$STATE_DIR"
-  # nwg-displays always writes a hyprlang monitors.conf, which this Lua config
-  # never reads, and from 0.4.3 it also writes a Lua sibling next to it. Point it
-  # at a DISCARD path in the state directory - never at
-  # UserConfigs/monitors.lua, which this system owns - and keep the path ending
-  # in .conf so the sibling is contained here too instead of escaping to
-  # ~/.config/hypr/monitors.lua.
-  local discard="$STATE_DIR/nwg-monitors.discard.conf"
-  local sibling="$STATE_DIR/nwg-monitors.discard.lua"
-  rm -f -- "$discard" "$sibling"
+  # Use the same file as a directly launched editor. MonitorWatcher imports
+  # each Apply (and Revert) while the GUI is still open; its Lua sibling is not
+  # sourced. A private discard path delayed every change until the GUI closed.
+  local discard="$config_home/hypr/monitors.conf"
+  local before
+  before="$(stat -c '%y:%s' -- "$discard" 2>/dev/null || true)"
   # Pause BEFORE the GUI starts, with our own PID, and only then replace it with
   # the GUI's. nwg applies its arrangement itself (dpms plus `hyprctl reload`),
   # and that reload emits a burst of monitor events: if the watcher saw them it
@@ -156,19 +153,16 @@ arrange_monitors() {
   wait "$pid" || true
   rm -f -- "$STATE_DIR/pause"
 
-  # nwg's reload put the STORED layout back on screen, because the Lua config
-  # does not read nwg's file. Bridge it: hand that file to the controller, which
-  # parses it, applies it through hl.monitor, and writes it to
-  # UserConfigs/monitors.lua so it survives. The menu then reopens and offers to
-  # save it under a name.
-  if [[ -s $discard ]] && grep -q '^[[:space:]]*monitor=' "$discard" 2>/dev/null; then
+  # Final import also covers an editor closed before the watcher's next tick.
+  # Simply opening and cancelling must not reapply a stale editor file.
+  if [[ -s $discard && "$(stat -c '%y:%s' -- "$discard")" != "$before" ]] \
+     && grep -q '^[[:space:]]*monitor=' "$discard" 2>/dev/null; then
     log "importing the arrangement nwg-displays wrote"
     "$DPM_PROFILE_SCRIPT" import-nwg "$discard" 9>&- \
       || notify "Display layouts" "Could not apply the arrangement from nwg-displays"
   else
     log "nwg-displays wrote no arrangement; nothing to import"
   fi
-  rm -f -- "$discard" "$sibling"
   return 0
 }
 

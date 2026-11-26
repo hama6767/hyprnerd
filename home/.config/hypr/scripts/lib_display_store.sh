@@ -135,6 +135,8 @@ ds_validate_layout() {
       then "a monitor y is not a number"
     elif ([ .monitors[] | select(((.transform // 0) | tonumber? // -1) as $t | $t < 0 or $t > 7) ] | length) > 0
       then "a monitor transform is outside 0-7"
+    elif ([ .monitors[] | select(has("vrr")) | select((.vrr | IN(0,1,2,3)) | not) ] | length) > 0
+      then "a monitor vrr is outside 0-3"
     elif (((.waybar.mode // "all") | IN("all","primary","selected")) | not)
       then "waybar.mode is not all, primary or selected"
     else "" end
@@ -557,8 +559,8 @@ ds_store_label() {
 #   monitor=<name>,disable              (separate line)
 #
 # <name> is `desc:<hyprctl .description>` (with '#' doubled) or a port name.
-# Extras after the scale (mirror, bitdepth, cm, vrr, ...) have no place in a
-# layout and are refused rather than dropped - see the note in the function.
+# VRR is preserved. Other extras (mirror, bitdepth, cm, ...) are refused
+# rather than silently dropped.
 ds_from_nwg_conf() {
   local conf=$1 norm=$2 raw extras
   # Parse the nwg lines into one JSON object per monitor name.
@@ -603,14 +605,17 @@ ds_from_nwg_conf() {
       name = join_fields(a, 1, mi - 1); gsub(/##/, "#", name)
       if (name == "") next
       mode[name] = a[mi]; pos[name] = a[mi+1]; scale[name] = a[mi+2]
-      for (i = mi + 3; i <= n; i++) extras[name] = extras[name] (extras[name] == "" ? "" : ",") a[i]
+      for (i = mi + 3; i <= n; i++) {
+        if (a[i] == "vrr" && a[i+1] ~ /^[0-3]$/) { vrr[name] = a[++i]; continue }
+        extras[name] = extras[name] (extras[name] == "" ? "" : ",") a[i]
+      }
       remember(name)
     }
     END {
       printf "["
       for (i = 1; i <= cnt; i++) {
         name = order[i]; np = pos[name]; split(np, p, "x")
-        printf "%s{\"name\":%s,\"mode\":%s,\"x\":%d,\"y\":%d,\"scale\":%s,\"transform\":%d,\"enabled\":%s,\"extras\":%s}",
+        printf "%s{\"name\":%s,\"mode\":%s,\"x\":%d,\"y\":%d,\"scale\":%s,\"transform\":%d,\"enabled\":%s,\"extras\":%s,\"vrr\":%s}",
           (i > 1 ? "," : ""),
           json_str(name),
           json_str(mode[name] == "" ? "" : mode[name]),
@@ -618,7 +623,8 @@ ds_from_nwg_conf() {
           (scale[name] == "" ? "1" : scale[name]),
           (name in tr ? tr[name] : 0),
           (name in dis ? "false" : "true"),
-          json_str(extras[name] == "" ? "" : extras[name])
+          json_str(extras[name] == "" ? "" : extras[name]),
+          (name in vrr ? vrr[name] : "null")
       }
       printf "]"
     }
@@ -629,8 +635,8 @@ ds_from_nwg_conf() {
   # hyprctl sometimes reports) is tolerated by comparing trimmed values.
   [[ -n ${raw//[[:space:]]/} && $raw != "[]" ]] || { ds_log "no monitors parsed from nwg config"; return 1; }
 
-  # A layout can express on/off, mode, scale, rotation and position - nothing
-  # else. nwg also writes mirror, bitdepth, colour management and VRR settings.
+  # A layout can express on/off, mode, scale, rotation, position and VRR.
+  # nwg also writes mirror, bitdepth and colour management settings.
   # Dropping those silently would quietly change the arrangement the user just
   # dragged, so refuse the import and name exactly what cannot be represented.
   extras="$(printf '%s' "$raw" | "$DS_JQ" -r '
@@ -659,6 +665,7 @@ ds_from_nwg_conf() {
                   enabled: $e.enabled,
                   mode: $e.mode, scale: $scale,
                   transform: $e.transform, x: $e.x, y: $e.y }
+                + (if $e.vrr != null then {vrr: $e.vrr} else {} end)
             end ] ) as $mons
     | if ($mons | length) == 0 then error("no monitors parsed from nwg config") else . end
     | ( [ $mons[] | select(.enabled) ] | group_by(.y) | to_entries

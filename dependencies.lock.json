@@ -119,6 +119,15 @@
       "member": "fd-v10.5.2-x86_64-unknown-linux-gnu/fd",
       "binary": "fd",
       "format": "tar"
+    },
+    "superfile": {
+      "version": "1.6.1",
+      "name": "superfile-linux-v1.6.1-amd64.tar.gz",
+      "url": "https://github.com/yorukot/superfile/releases/download/v1.6.1/superfile-linux-v1.6.1-amd64.tar.gz",
+      "sha256": "2ab6872fee8fb2d6d120503f964cc693cf5ce328afedbe3988729593870c570e",
+      "format": "tar.gz",
+      "member": "dist/superfile-linux-v1.6.1-amd64/spf",
+      "binary": "spf"
     }
   },
   "lazyvim": {

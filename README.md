@@ -20,7 +20,9 @@ python3 bootstrap.py --check
 python3 bootstrap.py --apply
 ```
 
-Neovim 0.12.6、LazyVim、lazygit 0.66.3、LazyDon 0.1.4、Atuin 18.25.1、tree-sitter、ripgrep、fdを導入します。公式リリースのURLとSHA-256、LazyVimのプラグインコミットを固定しています。実行ファイルは `~/.local/opt/hyprnerd-tools/` に配置し、`~/.local/bin/` へリンクします。Neovimは相対行番号を標準にし、現在行は絶対行番号を表示します。
+Neovim 0.12.6、LazyVim、lazygit 0.66.3、LazyDon 0.1.4、Atuin 18.25.1、superfile (`spf`) 1.6.1、tree-sitter、ripgrep、fdを導入します。公式リリースのURLとSHA-256、LazyVimのプラグインコミットを固定しています。実行ファイルは `~/.local/opt/hyprnerd-tools/` に配置し、`~/.local/bin/` へリンクします。Neovimは相対行番号を標準にし、現在行は絶対行番号を表示します。
+
+Bash/Zshの `EDITOR`・`VISUAL` と、spfのファイル／フォルダー編集を `nvim` に設定します。シェルから `spf` を起動すると、`q` で終了した場所へ元のシェルも移動します。設定済みのspfのテーマなどは維持します。既存のターミナルは開き直すか、`source ~/.config/shell/hyprnerd-tools.sh` で反映できます。
 
 Fcitx5 + Mozcと日本語フォントもパッケージから導入し、`Ctrl+Space` で日本語入力を切り替えます。既存のキーボードグループとGTKテーマは維持します。Hyprland 0.57用の起動処理とキー割り当てはデスクトップ設定に含みます。入力方式を読み込んでいない既存アプリは再起動してください。
 
@@ -76,7 +78,7 @@ python3 install.py --profile arch-laptop --apply --no-reload --keep-legacy-sessi
 | 操作 | キー／マウス |
 |---|---|
 | ターミナルを開く（共有プロセス再利用） | `Super+Enter` |
-| その方向のウィンドウを選択／画面端で隣のモニターを選択 | `Super+←/→/↑/↓` |
+| その方向のウィンドウを選択／画面端で隣のモニターを選択 | `Super+←/→/↑/↓`、`Super+H/J/K/L`（左/下/上/右） |
 | タイルをその方向へ移動／画面端で隣のモニターへ移動 | `Super+Shift+←/→/↑/↓` |
 | ウィンドウのサイズ変更 | `Super+Alt+←/→/↑/↓` |
 | 全体のタイル／自由配置を切り替え | `Super+Alt+Space` / バーの `Tile`・`Window` |
@@ -90,6 +92,15 @@ python3 install.py --profile arch-laptop --apply --no-reload --keep-legacy-sessi
 | 一覧から選択／ウィンドウ移動 | バー中央の番号を左／右クリック |
 | 日本語入力を切り替え | `Ctrl+Space` |
 | Dock の有効／無効を切り替え | `Ctrl+Alt+D` |
+| ヘルプ／全キーバインド検索 | `Super+Shift+H` / `Super+Shift+K` |
+| ウィンドウを閉じる | `Super+Q`（ブラウザーは確認後、4秒以内にもう一度） |
+| 壁紙を一時的に黒くする／元へ戻す | `Super+Shift+M` |
+
+Firefox、Chrome/Chromium、Vivaldi、Brave、EdgeとFirefox系ブラウザーは、1回目の `Super+Q` で確認を表示し、同じウィンドウで4秒以内にもう一度押すと通常の終了要求を送ります。別のウィンドウを選択するか時間が過ぎると取り消します。他のアプリは1回で閉じます。
+
+`Super+Shift+M` は全モニターの壁紙だけを黒くします。再度押すと各画面の元の壁紙を復元し、Wallust・バー・ウィンドウの配色は変更しません。
+
+モニター配置は `Super+Alt+D` → 配置編集、または `nwg-displays` から変更できます。Applyで指定した配置とVRRを取り込み、接続中のモニター構成ごとに `nwg-displays` という名前で保存します。手書きの `UserConfigs/monitors.lua` がある場合は、取り込み前に `.before-nwg-日時` へ退避します。
 
 `Super+矢印`は画面上の位置に沿って選択を移します。その方向にウィンドウがなければ、空のモニターも選択でき、そのまま `Super+Enter` でターミナルを追加できます。カーソルも選択先へ追従します。モニター選択やタイル移動では、表示中のデスクトップ番号は変わりません。モニターの台数・上下左右の配置・倍率はHyprlandの現在の構成に従います。全画面のワークスペース切替は引き続き `Super+Ctrl+←/→` です。
 
@@ -143,7 +154,7 @@ scripts/            導入・検証・CI・パッケージング用スクリプ�
 
 ## 検証・開発・リリース
 
-Ubuntu 24.04 / 26.04 でPython 3.12 / 3.14を検証します。両Ubuntu環境とArch rollingコンテナでは、基本道具とMozcを実際にインストールし、LazyVimの起動・相対行番号・AtuinのBash組み込みまで確認します。GUI/GPUや物理キー入力の検証は実機で別途行います。
+Ubuntu 24.04 / 26.04 でPython 3.12 / 3.14を検証します。両Ubuntu環境とArch rollingコンテナでは、基本道具とMozcを実際にインストールし、LazyVimの起動・相対行番号・AtuinのBash組み込み・spfの実際のTUI終了時cdまで確認します。ブラウザー終了確認とモニター配置取り込みにも回帰テストがあります。GUI/GPUや物理キー入力の検証は実機で別途行います。
 
 Push / PR ごとに GitHub Actions でインストーラのテスト（チェック・適用・冪等性・復元）、Lua/Bash 構文検証、ハッシュ整合性チェックを実行します。タグ（`v*`）を push するとアーカイブとチェックサム付きで GitHub Release を公開します。
 

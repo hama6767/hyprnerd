@@ -3,7 +3,7 @@
 import json,os,pathlib,shutil,subprocess,sys,tempfile
 H=pathlib.Path.home()
 def call(*args):return subprocess.check_output(args,text=True,stderr=subprocess.STDOUT).strip()
-for executable,flag in [('nvim','--version'),('lazygit','--version'),('atuin','--version'),('lazydon','--help'),('tree-sitter','--version'),('rg','--version'),('fd','--version')]:
+for executable,flag in [('nvim','--version'),('lazygit','--version'),('atuin','--version'),('lazydon','--help'),('tree-sitter','--version'),('rg','--version'),('fd','--version'),('spf','--version')]:
     out=call(str(H/'.local/bin'/executable),flag);assert out;print('PASS',executable,out.splitlines()[0])
 with tempfile.TemporaryDirectory(prefix='hyprnerd-check-') as temporary:
     marker=pathlib.Path(temporary)/'editor.json'
@@ -21,3 +21,12 @@ profile=(H/'.config/fcitx5/profile').read_text();config=(H/'.config/fcitx5/confi
 assert 'mozc' in profile and 'Control+space' in config
 assert pathlib.Path('/usr/share/fcitx5/inputmethod/mozc.conf').exists()
 print('PASS Mozc package and Ctrl+Space configuration')
+import tomllib
+spf=tomllib.loads((H/'.config/superfile/config.toml').read_text())
+assert spf['cd_on_quit'] is True and spf['editor']=='nvim' and spf['dir_editor']=='nvim'
+for shell in ['bash','zsh']:
+    if not shutil.which(shell):continue
+    out=call(shell,'-c','. "$HOME/.config/shell/hyprnerd-tools.sh"; test "$EDITOR:$VISUAL" = nvim:nvim; type spf')
+    assert 'function' in out
+print('PASS superfile cd-on-quit and Neovim defaults in Bash/Zsh')
+subprocess.run([sys.executable,str(pathlib.Path(__file__).with_name('check-spf.py'))],check=True,timeout=45)

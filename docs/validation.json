@@ -134,6 +134,31 @@
       "Menu selects logical desktop IDs and sanitizes app labels",
       "Typing and focus changes do not trigger overview queries"
     ],
-    "arch": "This overview update has not been applied live: the reference laptop was closed. The portable configuration is included in the repository."
+    "arch": "Applied and verified on the three-output Arch session on 2026-11-26."
+  },
+  "desktop_tools_2026_11_26": {
+    "hosts": [
+      "Ubuntu 24.04 / Hyprland 0.57.2",
+      "Arch Linux / Hyprland 0.57.2"
+    ],
+    "spf": "Official 1.6.1 installed on both hosts; real PTY cd-on-quit passed in Bash and Zsh with spaces, quotes and Japanese paths; EDITOR/VISUAL and file/directory editor set to nvim.",
+    "keys": "Super+H/J/K/L focus; Super+Shift+H help; Super+Shift+M black wallpaper toggle. All bindings unique on both hosts.",
+    "close_guard": "One press leaves the test browser-class window open; second closes it. Timeout, focus cancellation and normal-app closing covered by Lua tests.",
+    "wallpaper": "Black and restore passed on Ubuntu and all three Arch outputs; theme palette unchanged.",
+    "display_import": "Fixed VRR parsing, manual-rule backup and persistent storage. Arch automatic watcher import and config reload both preserve the editor arrangement.",
+    "arch_geometry": {
+      "DP-2": [
+        0,
+        0
+      ],
+      "eDP-1": [
+        1920,
+        360
+      ],
+      "DP-3": [
+        3840,
+        0
+      ]
+    }
   }
 }

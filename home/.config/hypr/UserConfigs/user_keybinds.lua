@@ -174,6 +174,23 @@ for _, item in ipairs({
     { description = "resize window " .. direction, repeating = true })
 end
 
+-- Vim navigation mirrors the arrows; Shift+H is reserved for help.
+for _, item in ipairs({ { "H", "left" }, { "J", "down" }, { "K", "up" }, { "L", "right" } }) do
+  unbind("SUPER", item[1])
+  bind("SUPER", item[1], hl.dsp.focus({ direction = item[2] }),
+    { description = "focus " .. item[2] .. " window or monitor (Vim)" })
+end
+unbind("SUPER SHIFT", "H")
+bind("SUPER SHIFT", "H", exec_cmd("$HOME/.config/hypr/scripts/KeyHints.sh"), { description = "help / cheat sheet" })
+local config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
+HYPRNERD_CLOSE_GUARD = dofile(config_home .. "/hypr/lua/close_guard.lua")(hl)
+unbind("SUPER", "Q")
+bind("SUPER", "Q", function() HYPRNERD_CLOSE_GUARD.press() end,
+  { description = "close window (press twice within 4 seconds for browsers)" })
+unbind("SUPER SHIFT", "M")
+bind("SUPER SHIFT", "M", exec_cmd("$HOME/.config/hypr/scripts/WallpaperPrivacy.py"),
+  { description = "toggle temporary black wallpaper (preserve theme)" })
+
 -- Hyprnerd: workspace changes act on the complete desktop across all outputs.
 local function desktop(fn)
   return function() if HYPRNERD_DESKTOP then fn(HYPRNERD_DESKTOP) end end

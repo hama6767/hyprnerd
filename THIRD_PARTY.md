@@ -18,3 +18,4 @@
 Ubuntu Kvantum/qt5ct packages are downloaded by exact URL and checksum; package binaries are excluded from Git and release archives. Package source and licence information remain available from Ubuntu and the Papirus PPA named in `dependencies.lock.json`.
 
 - LazyVim starter configuration: https://github.com/LazyVim/starter at 803bc181d7c0d6d5eeba9274d9be49b287294d99; Apache-2.0, license in foundation/nvim/LICENSE. Tool binaries are downloaded from their authors, not redistributed in this repository.
+- superfile: https://github.com/yorukot/superfile, MIT. The installer downloads the pinned official release; the Bash/Zsh wrapper follows its documented cd-on-quit integration.

@@ -45,4 +45,10 @@ class BootstrapTests(unittest.TestCase):
         self.assertIn(str(snapshots[0]),(self.home/'.local/state/hyprnerd/legacy-entry.conf').read_text())
     def test_arch_package_plan_is_full_upgrade(self):
         command=b.package_commands('arch')[0];self.assertIn('-Syu',command);self.assertIn('fcitx5-mozc',command)
+    def test_spf_preserves_custom_options_and_sets_editor_and_cd(self):
+        p=self.home/'.config/superfile/config.toml';p.parent.mkdir(parents=True)
+        p.write_text('theme = "custom"\neditor = "nano"\ncd_on_quit = false\n')
+        b.configure_spf(self.backup);first=p.read_text();b.configure_spf(self.backup)
+        self.assertEqual(first,p.read_text());self.assertIn('theme = "custom"',first)
+        self.assertIn('editor = "nvim"',first);self.assertIn('dir_editor = "nvim"',first);self.assertIn('cd_on_quit = true',first)
 if __name__=='__main__':unittest.main()

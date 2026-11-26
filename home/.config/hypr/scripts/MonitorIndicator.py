@@ -61,7 +61,7 @@ class Indicator:
             'class': 'active' if selected else 'inactive',
             'tooltip': html.escape(
                 f"モニター {label}: {name} — {'選択中' if selected else '未選択'}\n"
-                'Super+矢印: ウィンドウ／モニター選択\n'
+                'Super+矢印 / H J K L: ウィンドウ／モニター選択\n'
                 'Super+Shift+矢印: タイル移動\nSuper+Enter: 選択先にターミナルを追加'
             ),
         }

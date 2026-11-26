@@ -161,9 +161,11 @@ hypr_eval() {
   return 0
 }
 
-monitor_lua() {  # port mode x y scale transform
-  printf 'hl.monitor({ output = "%s", mode = "%s", position = "%sx%s", scale = "%s", transform = %s, disabled = false })' \
+monitor_lua() {  # port mode x y scale transform [vrr]
+  printf 'hl.monitor({ output = "%s", mode = "%s", position = "%sx%s", scale = "%s", transform = %s, disabled = false' \
     "$1" "$2" "$3" "$4" "$5" "${6:-0}"
+  [[ ${7:-inherit} == inherit ]] || printf ', vrr = %s' "$7"
+  printf ' })'
 }
 
 # dp_monitors [tag]: normalize `hyprctl -j monitors all` into a file and print
@@ -371,6 +373,7 @@ dp_monitors_lua_render() {
            + "\",\n    position = \"" + ((.x // 0) | tostring) + "x" + ((.y // 0) | tostring)
            + "\",\n    scale = \"" + (.scale | tostring)
            + "\",\n    transform = " + ((.transform // 0) | tostring)
+           + (if has("vrr") then ",\n    vrr = " + (.vrr | tostring) else "" end)
            + ",\n    disabled = false,\n})\n"
       else "hl.monitor({\n    output = \"" + (.port | safe) + "\",\n    disabled = true,\n})\n"
       end
@@ -395,8 +398,15 @@ dp_monitors_lua_write() {
   [[ $DRY_RUN -eq 1 ]] && { say_plan "write $DP_MONITORS_LUA for $fp ($name)"; return 0; }
   [[ -n $fp ]] || return 0
   if ! dp_monitors_lua_owned; then
-    log "not writing $DP_MONITORS_LUA: it holds rules DisplayProfile.sh did not generate"
-    return 0
+    if [[ ${DP_IMPORT_USER_LAYOUT:-0} != 1 ]]; then
+      log "not writing $DP_MONITORS_LUA: it holds rules DisplayProfile.sh did not generate"
+      return 0
+    fi
+    # Clicking Apply in the arrangement editor explicitly chooses a new layout.
+    # Preserve the old manual rules before making that choice persistent.
+    local backup="$DP_MONITORS_LUA.before-nwg-$(date +%Y%m%d-%H%M%S)-$$"
+    cp -p -- "$DP_MONITORS_LUA" "$backup" || return 1
+    log "backed up manual monitor rules to $backup"
   fi
   mkdir -p -- "$(dirname -- "$DP_MONITORS_LUA")" 2>/dev/null || true
   if dp_monitors_lua_render "$layout" "$fp" "$name" | dp_write_file "$DP_MONITORS_LUA"; then
@@ -423,7 +433,7 @@ dp_monitors_lua_write() {
 dp_apply_layout() {
   local layout=$1 fp=${2-} name=${3-} persist=${4-no-persist}
   local stored=$1
-  local port mode x y scale transform primary_id primary_port
+  local port mode x y scale transform vrr primary_id primary_port
   ds_validate_layout "$layout" || { notify "Display profile" "That layout is not usable"; return 1; }
 
   # Lid/clamshell: with the lid shut and an external monitor on, drop the
@@ -440,11 +450,11 @@ dp_apply_layout() {
   # 1. configure everything the layout enables
   #    (.x // 0) rather than .x: the validator allows a layout to leave the
   #    coordinates out and have the grid fill them in, so they may be absent.
-  while IFS=$'\t' read -r port mode x y scale transform; do
+  while IFS=$'\t' read -r port mode x y scale transform vrr; do
     [[ -n $port ]] || continue
-    hypr_eval "$(monitor_lua "$port" "$mode" "$x" "$y" "$scale" "$transform")" || return 1
+    hypr_eval "$(monitor_lua "$port" "$mode" "$x" "$y" "$scale" "$transform" "$vrr")" || return 1
   done < <("$DP_JQ" -r '.monitors[] | select(.enabled == true)
-            | [ .port, .mode, (.x // 0), (.y // 0), .scale, (.transform // 0) ] | @tsv' -- "$layout")
+            | [ .port, .mode, (.x // 0), (.y // 0), .scale, (.transform // 0), (.vrr // "inherit") ] | @tsv' -- "$layout")
 
   # 2. verify ALL of them before disabling anything
   while IFS=$'\t' read -r port mode x y scale transform; do
@@ -889,15 +899,14 @@ dp_list() {
   ds_layout_names "$norm" "$DP_STORE_FILE"
 }
 
-# dp_import_nwg <file>: the fallback for nwg-displays releases that write only a
-# monitors.conf (0.3.x). From 0.4.3 it also writes the Lua sibling, which the Lua
-# config reads directly, so the menu prefers that path and only comes here when
-# there is no Lua output to read.
+# dp_import_nwg <file>: import the editor output into the authoritative Lua file.
+# The separate nwg-generated Lua sibling is intentionally not sourced.
 #
 # It parses what nwg wrote, applies it, and records the result as the running
-# layout; it does NOT save it - the menu offers that afterwards via capture.
+# layout and saves it for this monitor set so it also survives logout/hotplug.
 dp_import_nwg() {
   local conf=$1 norm layout fp reason
+  local DP_IMPORT_USER_LAYOUT=1
   [[ -n $conf ]] || die "import-nwg needs the path to the file nwg-displays wrote"
   [[ -f $conf ]] || die "no such file: $conf"
   norm="$(dp_monitors)" || return 1
@@ -923,12 +932,13 @@ dp_import_nwg() {
   log "importing the arrangement from nwg-displays"
   # A drag the user made in nwg-displays is an explicit action, so it persists -
   # otherwise the arrangement would be undone by the next config reload.
-  if dp_apply_layout "$layout" "$fp" "(auto)" persist; then
-    # Record it as the running layout. Without this the state file still names
-    # the previous layout, the menu shows the wrong one as running, and a config
-    # reload re-applies the OLD layout - silently undoing the drag. `(auto)` is
-    # honest: applied, but not saved under a name yet.
-    dp_state_write "$fp" "(auto)"
+  if dp_apply_layout "$layout" "$fp" "nwg-displays" persist; then
+    if [[ $DRY_RUN -eq 0 ]]; then
+      mkdir -p -- "$(dirname -- "$DP_STORE_FILE")"
+      ds_store_set "$DP_STORE_FILE" "$fp" "nwg-displays" "$layout" || return 1
+      ds_store_default "$DP_STORE_FILE" "$fp" "nwg-displays" || return 1
+    fi
+    dp_state_write "$fp" "nwg-displays"
     return 0
   fi
   return 1

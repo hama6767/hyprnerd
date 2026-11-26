@@ -154,8 +154,9 @@ recorded layout, so a layout this system has just written is never mistaken for
 an edit.)
 
 The file it writes carries a marker line saying it was generated. **Delete that
-marker line to take the file over**: from then on it is treated as yours, it is
-never overwritten, and the lid logic still honours what it says.
+marker line to take the file over**: automatic layout application leaves it
+alone, and the lid logic still honours what it says. An explicit editor Apply
+backs it up before replacing it with the new arrangement.
 
 ## When it deliberately does nothing
 
@@ -197,25 +198,25 @@ profile matched by port does not follow a monitor moved to another port.
 
 ## Running nwg-displays directly
 
-`nwg-displays` writes a `monitors.conf` that this Lua config never reads, and it
-applies its own arrangement by dispatching `dpms` and running `hyprctl reload`.
-That reload re-runs the Lua config, so what you dragged is briefly replaced by
-the stored layout.
+The watcher imports `~/.config/hypr/monitors.conf` after **Apply**, whether the
+editor was opened from `SUPER+ALT+D` or directly. Both launch paths now use the
+same file, so changes are applied while the editor remains open. The editor's
+revert writes are imported too. It may take about two seconds for the import;
+Hyprland's own reload can briefly show the previous arrangement first.
 
-The watcher bridges the gap. It watches `~/.config/hypr/monitors.conf` - nwg's
-own default - and when that file changes it hands it to the controller, which
-applies it and writes `UserConfigs/monitors.lua`. So **you can run
-`nwg-displays` however you like**: from the layout menu, a launcher, or a
-terminal. Nothing has to know that you launched it, because the signal is the
-file changing, not the process.
+Mode, position, scale, rotation, enabled state and VRR (`vrr,0` through `vrr,3`)
+are preserved. In particular, the default `vrr,0` written by newer nwg-displays
+versions no longer causes the entire arrangement to be rejected.
 
-The arrangement lands within about two seconds of pressing **Apply**, and the
-screens may jump back once in between. That is nwg's own reload applying the
-stored layout before the import replaces it; the end state is what you dragged.
+An imported arrangement is saved as `nwg-displays` for the current monitor set
+and becomes that set's default. Other named layouts are retained. The generated
+`UserConfigs/monitors.lua` survives reload, and the stored layout also survives
+logout and reconnecting the same monitors. Explicit editor imports back up
+manual monitor rules to `monitors.lua.before-nwg-<timestamp>-<pid>` before
+replacing them. Automatic hotplug reconciliation still respects manual rules.
 
-While nwg-displays is open the watcher drops monitor and reload events, so its
-reload cannot undo the drag before the import lands. That check is by process
-name, so it works for a run the menu did not start.
+While the editor is open, the watcher suppresses automatic profile reapplication
+but continues importing each saved edit.
 
 ## Do not add `require("monitors")`
 
@@ -241,11 +242,10 @@ alone and let the watcher import the arrangement instead.
 - **Two identical monitors with no serial number** are told apart by which port
   they were on when you saved the layout. Swap their cables and they swap places
   until you save again.
-- **An arrangement made in `nwg-displays` has no name yet.** The program knows
-  nothing about monitor sets, so the menu reopens afterwards and offers to save
-  it. Until you do, it is applied and written to `UserConfigs/monitors.lua` (so
-  a reload does not undo it), but it is not what a newly connected monitor
-  restores. Quick Settings' own `nwg-displays` entry behaves the same way.
+- **Editor arrangements are saved automatically.** Each monitor set retains
+  its latest editor arrangement as `nwg-displays`; use Capture to keep an
+  additional named copy.
+
 - **`nwg-displays` applies its own arrangement and reloads Hyprland.** Its
   reload re-runs the Lua config, which does not read the file nwg writes, so the
   screens can jump back for a moment before the import re-applies your drag.
@@ -287,11 +287,9 @@ Runtime state lives in `$XDG_RUNTIME_DIR/kooldots-display-profiles/`:
 `display-profile.log`, `monitor-watcher.log`, `current` (the fingerprint and the
 running layout's name), `active-layout.json` and `active-layout.fingerprint`
 (what is on screen now), `config-active`, `pause`, `monitors*.json` scratch
-files, `nwg-import.stamp` (what the watcher has already imported), and the
-throwaway `nwg-monitors.discard.conf` the menu points `nwg-displays` at. The
-`.conf` suffix on that last one matters: `nwg-displays` derives the Lua file it
-also writes from it, and a path without it makes nwg write to
-`~/.config/hypr/monitors.lua` instead.
+files, and `nwg-import.stamp` (what the watcher has already imported).
+Both editor launch paths write `~/.config/hypr/monitors.conf`; its sibling
+`~/.config/hypr/monitors.lua` is intentionally not sourced.
 
 > **If you update these scripts by hand, never copy the repo's
 > `UserConfigs/display-layouts.json` over your own.** The repo ships it empty,

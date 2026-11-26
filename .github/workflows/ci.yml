@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install syntax checker
-        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends lua5.4
+        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends lua5.4 jq
       - name: Validate configuration and asset integrity
         run: python scripts/ci.py
       - name: Test installer in isolated homes

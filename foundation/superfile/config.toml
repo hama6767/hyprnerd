@@ -1,0 +1,5 @@
+editor = "nvim"
+dir_editor = "nvim"
+cd_on_quit = true
+auto_check_update = false
+ignore_missing_fields = true

@@ -43,5 +43,6 @@ def main():
     for path in (R/'home/.config/hypr/wallust').glob('*.toml'):tomllib.loads(path.read_text())
     with tempfile.TemporaryDirectory(prefix='hyprnerd-tests-') as temporary:
         subprocess.run([shutil.which('lua5.4') or 'lua',str(R/'tests/desktop.lua'),str(R/'home/.config/hypr/lua/hyprnerd_desktop.lua'),temporary],check=True)
+    subprocess.run([shutil.which('lua5.4') or 'lua',str(R/'tests/close_guard.lua'),str(R/'home/.config/hypr/lua/close_guard.lua')],check=True)
     print(f'PASS: {len(manifest)} assets, {len(python)} Python files, {len(shell)} shell scripts, {len(lua)} Lua files, JSON/TOML, public-content checks')
 if __name__=='__main__':main()
