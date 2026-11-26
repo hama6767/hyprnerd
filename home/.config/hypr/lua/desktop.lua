@@ -13,4 +13,11 @@ HYPRNERD_DESKTOP = factory(hl, {
   runtime_dir = runtime,
   prepare = function() os.execute("mkdir -p -- " .. quote(state) .. " " .. quote(runtime)) end,
 }):setup()
-hl.config({ binds = { hide_special_on_workspace_change = true } })
+-- Apply after the host's input settings: keyboard navigation must remain on
+-- the chosen window/output when a mouse or touchpad reports another position.
+-- Pointer hover/scroll still work; clicking selects the window and its output.
+hl.config({
+  binds = { hide_special_on_workspace_change = true },
+  input = { follow_mouse = 2, float_switch_override_focus = 0 },
+  misc = { mouse_move_focuses_monitor = false },
+})

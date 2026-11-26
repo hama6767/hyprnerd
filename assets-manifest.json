@@ -256,7 +256,7 @@
   "home/.config/hypr/lua/animations.lua": "d30cd8e11077d208c4743b26938399253638dc2fa54da4aee3bbabbc29fbbeca",
   "home/.config/hypr/lua/close_guard.lua": "1dc66b1dae31b9b9bc7dbde631b24f3fe1a45ffb7c67bf8af207b98e37dd96af",
   "home/.config/hypr/lua/decorations.lua": "6e411f2b946f22390278d26718344f633854929d02d04ef30a1818b29e3163b2",
-  "home/.config/hypr/lua/desktop.lua": "4fc83b0cef2f221470ed82367074ac2b5956fb37f0eb34e52417b4e6df67959a",
+  "home/.config/hypr/lua/desktop.lua": "772d3a63c19b36232958ab96ba825335e9b1d508461c9da0f84b53af93d1704b",
   "home/.config/hypr/lua/env.lua": "e62e8f5de9ab14667a12175ec47f209343c7ccba4af79dc0537d8abdc25229dc",
   "home/.config/hypr/lua/hyprnerd_desktop.lua": "4a54f32bef50cb37a20bc26733d399a8c45bdf87bf7221e23583d1f929779847",
   "home/.config/hypr/lua/input_method.lua": "c0ed6dff83cb880298395290855d64eb35a12fb878b03867d04e60f84ca663e4",

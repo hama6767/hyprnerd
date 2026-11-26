@@ -160,5 +160,12 @@
         0
       ]
     }
+  },
+  "keyboard_focus_retention": {
+    "date": "2026-11-26",
+    "host": "Arch Linux / Hyprland 0.57.2 / three physical outputs",
+    "reproduction": "Wayland virtual keyboard Super+Left and Super+H remained focused after release. With follow_mouse=1, a Wayland pointer movement onto the previous output took keyboard focus back.",
+    "fix": "follow_mouse=2, float_switch_override_focus=0, mouse_move_focuses_monitor=false, applied after host input settings.",
+    "verification": "The same keyboard/pointer sequence retained window and monitor focus for tiled and floating targets; a left click selected the hovered window and output. Desktop groups were unchanged; test windows were removed and the original desktop restored. After persistent configuration was reloaded, selection of an empty output survived pointer movement to another output, and a new shared-instance Kitty opened on the selected empty output. Both hosts had no config errors and unchanged animation settings."
   }
 }
